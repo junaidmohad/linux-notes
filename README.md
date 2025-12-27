@@ -256,9 +256,436 @@ A file pointed to by a symbolic link, and the symbolic link itself are largely i
 <img width="251" height="198" alt="image" src="https://github.com/user-attachments/assets/bba3b065-e230-4c84-aaee-3ba5b250a14b" />
 <img width="241" height="102" alt="image" src="https://github.com/user-attachments/assets/15471dd4-46d3-4387-b3bc-e62da92ed4a9" />
 
-<img width="397" height="209" alt="image" src="https://github.com/user-attachments/assets/26ad3146-84a1-4406-840f-d51cdba61370" />
+<img width="362" height="205" alt="image" src="https://github.com/user-attachments/assets/2e54afe8-5c67-4ca7-9422-edea06e8f789" />
 
+<img width="242" height="147" alt="image" src="https://github.com/user-attachments/assets/30a0fd44-0302-4d3c-afa6-f3d8a7157a5d" />
 
+<img width="244" height="200" alt="image" src="https://github.com/user-attachments/assets/6b24e96a-ad29-4819-ad9a-424fd33776b2" />
 
+<img width="399" height="120" alt="image" src="https://github.com/user-attachments/assets/d1cc3f7f-f8cc-4c81-9bee-17a5a186ddc5" />
 
+One thing we notice is that both the second fields in the listings for fun and fun-hard contain a 4 which is the number of hard links that now exist for the file. Remember that a file will always have at least one link because the file's name is created by a link. So, how do we know that fun and fun-hard are, in fact, the same file? In this case, ls is not very helpful. While we can see that fun and fun-hard are both the same size (field 5), our listing provides no way to be sure. To solve this problem, we're going to have to dig a little deeper.
+When thinking about hard links, it is helpful to imagine that files are made up of two parts.
+1.The data part containing the file's contents.
+2.The name part that holds the file's name.
+When we create hard links, we are actually creating additional name parts that all refer to the same data part. The system assigns a chain of disk blocks to what is called an inode, which is then associated with the name part. Each hard link therefore refers to a specific inode containing the file's contents.
+
+The ls command has a way to reveal this information. It is invoked with the -i option.
+
+<img width="475" height="119" alt="image" src="https://github.com/user-attachments/assets/5087013a-baa5-467b-ab44-7e1db3d0c41f" />
+
+In this version of the listing, the first field is the inode number and, as we can see, both fun and fun-hard share the same inode number, which confirms they are the same file.
+
+Symbolic links were created to overcome the two disadvantages of hard links.
+  1.Hard links cannot span physical devices.
+  2.Hard links cannot reference directories, only files.
+Symbolic links are a special type of file that contains a text pointer to the target file or directory.
+
+<img width="480" height="380" alt="image" src="https://github.com/user-attachments/assets/547477ea-8284-4e45-b530-5c3cb8456544" />
+
+<img width="471" height="197" alt="image" src="https://github.com/user-attachments/assets/96516c9f-d728-4728-929b-fde0f67e8ac5" />
+
+<img width="468" height="185" alt="image" src="https://github.com/user-attachments/assets/3243105c-5b7e-4c5d-81d4-408543d9c784" />
+
+<img width="467" height="181" alt="image" src="https://github.com/user-attachments/assets/ae3d8ef9-6769-48f6-a671-1f1eb2dca0a0" />
+<img width="284" height="59" alt="image" src="https://github.com/user-attachments/assets/a9b232e1-2c07-40cf-895c-275835891ce0" />
+
+<img width="365" height="134" alt="image" src="https://github.com/user-attachments/assets/af9bd1a0-3f3d-47d1-bb03-5aa7eec18e16" />
+
+<img width="664" height="159" alt="image" src="https://github.com/user-attachments/assets/9a40f86f-947f-4491-b0cf-c285b3a1568f" />
+
+5 – Working with Commands
+  ●  type – Indicate how a command name is interpreted
+  ●  which – Display which executable program will be executed
+  ●  help – Get help for shell builtins
+  ●  man – Display a command's manual page
+  ●  apropos – Display a list of appropriate commands
+  ●  info – Display a command's info entry
+  ●  whatis – Display one-line manual page descriptions
+  ●  alias – Create an alias for a command
+
+What Exactly Are Commands?
+A command can be one of four different things:
+  1.An executable program like all those files we saw in /usr/bin. Within this category, programs can be compiled binaries such as programs written in C and C++, or programs written in scripting languages such as the shell, Perl, Python, Ruby, and so on.
+  2.A command built into the shell itself. bash supports a number of commands internally called shell builtins. The cd command, for example, is a shell builtin.
+  3.A shell function. Shell functions are miniature shell scripts incorporated into the environment. We will cover configuring the environment and writing shell functions in later chapters, but for now, just be aware that they exist.
+  4.An alias. Aliases are commands that we can define ourselves, built from other commands.
+
+type – Display a Command's Type
+  The type command is a shell builtin that displays the kind of command the shell will execute, given a particular command name.
+<img width="282" height="182" alt="image" src="https://github.com/user-attachments/assets/baa68ff0-98b8-4f78-9a3f-c382e1701e29" />
+ls command is actually an alias for the ls command with the “--color=tty” option added. Now we know why the output from ls is displayed in color!
+
+which – Display an Executable's Location
+  Sometimes there is more than one version of an executable program installed on a system. While this is not common on desktop systems, it's not unusual on large servers. To determine the exact location of a given executable, the which command is used. 
+
+<img width="255" height="187" alt="image" src="https://github.com/user-attachments/assets/a239f549-577c-4296-8b46-34c09776f4d7" />
+
+which only works for executable programs, not builtins nor aliases that are substitutes for actual executable programs. When we try to use which on a shell builtin for example, cd, we either get no response or get an error message
+
+help – Get Help for Shell Builtins
+
+<img width="332" height="120" alt="image" src="https://github.com/user-attachments/assets/50a6e677-b8e7-4fb2-a8ca-10572a32cb0a" />
+
+A note on notation: When square brackets appear in the description of a command's syntax, they indicate optional items. A vertical bar character indicates mutually exclusive items. In the case of the cd command above:
+cd [-L|[-P[-e]]] [dir]
+This notation says that the command cd may be followed optionally by either a “-L” or a “-P” and further, if the “-P” option is specified the “-e” option may also be included followed by the optional argument “dir”.
+
+Helpful hint: By using the help command with the -m option, help will display its output in an alternate format.
+
+--help – Display Usage Information
+
+<img width="632" height="401" alt="image" src="https://github.com/user-attachments/assets/470125c2-bdf2-4d51-82d0-f8ef3bbcb98f" />
+
+man – Display a Program's Manual Page
+  Most executable programs intended for command line use provide a formal piece of documentation called a manual or man page. A special paging program called man is used to view them.
+  Man pages vary somewhat in format but generally contain the following:
+•A title (the page’s name)
+•A synopsis of the command's syntax
+•A description of the command's purpose
+•A listing and description of each of the command's options
+Man pages, however, do not usually include examples, and are intended as a reference, not a tutorial.
+
+<img width="647" height="538" alt="image" src="https://github.com/user-attachments/assets/e7e60f65-cbce-4b45-a49a-9953f7313856" />
+<img width="842" height="400" alt="image" src="https://github.com/user-attachments/assets/d0c567e8-a321-4f98-9cd5-668fdd77ea03" />
+
+Sometimes we need to refer to a specific section of the manual to find what we are looking for. This is particularly true if we are looking for a file format that is also the name of a command. Without specifying a section number, we will always get the first instance of a match, probably in section 1. To specify a section number, we use man like this:
+  
+  man section search_term
+<img width="177" height="52" alt="image" src="https://github.com/user-attachments/assets/37bffed9-5bcf-48b4-aad3-c99bde969fce" />
+<img width="638" height="537" alt="image" src="https://github.com/user-attachments/assets/3ccc1584-da38-42db-8c61-a922b41c9206" />
+
+apropos – Display Appropriate Commands
+  It is also possible to search the list of man pages for possible matches based on a search term. It's crude but sometimes helpful.
+<img width="645" height="404" alt="image" src="https://github.com/user-attachments/assets/dafafffc-694c-41a4-abd5-4991e776af7d" />
+
+Note that the man command with the “-k” option performs the same function as apropos.
+
+whatis – Display One-line Manual Page Descriptions
+  The whatis program displays the name and a one-line description of a man page matching a specified keyword
+<img width="397" height="61" alt="image" src="https://github.com/user-attachments/assets/5de399bc-a72c-454c-a105-69ab36cbd1da" />
+
+The Most Brutal Man Page Of Them All
+As we have seen, the manual pages supplied with Linux and other Unix-like systems are intended as reference documentation and not as tutorials. Many man pages are hard to read, but I think that the grand prize for difficulty has got to go to the man page for bash. As I was doing research for this book, I gave the bash man page careful review to ensure that I was covering most of its topics. When printed, it's more than 80 pages long and extremely dense, and its structure makes absolutely no sense to a new user.
+On the other hand, it is very accurate and concise, as well as being extremely complete. So check it out if you dare and look forward to the day when you can read it and it all makes sense.
+
+info – Display a Program's Info Entry
+  The GNU Project provides an alternative to man pages for their programs, called “info.” Info manuals are displayed with a reader program named, appropriately enough, info. Info pages are hyperlinked much like web pages.
+<img width="653" height="467" alt="image" src="https://github.com/user-attachments/assets/e7b2c9d3-9366-47ad-b48f-02f9937fd39d" />
+
+The info program reads info files, which are tree structured into individual nodes, each containing a single topic. Info files contain hyperlinks that can move the reader from node to node. A hyperlink can be identified by its leading asterisk and is activated by placing the cursor upon it and pressing the Enter key.
+
+<img width="832" height="349" alt="image" src="https://github.com/user-attachments/assets/1afe9503-073a-4230-8db8-93833852493c" />
+<img width="835" height="92" alt="image" src="https://github.com/user-attachments/assets/170fe6ff-cb75-4673-82d7-c82efc0ba7b1" />
+
+Most of the command line programs we have discussed so far are part of the GNU Project's coreutils package
+
+README and Other Program Documentation Files
+Many software packages installed on our system have documentation files residing in the /usr/share/doc directory. Most of these are stored in plain text format and can be viewed with less. Some of the files are in HTML format and can be viewed with a web browser. We may encounter some files ending with a “.gz” extension. This indicates that they have been compressed with the gzip compression program. The gzip package includes a special version of less called zless that will display the contents of gzip-compressed text files.
+
+It's possible to put more than one command on a line by separating each command with a semicolon. It works like this:
+command1; command2; command3...
+<img width="593" height="89" alt="image" src="https://github.com/user-attachments/assets/958359b2-74c5-4fc8-aff6-f0ca219a75f6" />
+
+<img width="648" height="274" alt="image" src="https://github.com/user-attachments/assets/ddabdbce-04b6-4807-8fb2-63470ab4b1d1" />
+<img width="297" height="55" alt="image" src="https://github.com/user-attachments/assets/fc920b25-4fb3-4b6d-b6de-2639637bdd9e" />
+<img width="171" height="105" alt="image" src="https://github.com/user-attachments/assets/afe24dfd-c731-438d-8183-b693e79a575a" />
+
+<img width="289" height="284" alt="image" src="https://github.com/user-attachments/assets/a2de8833-dfc7-4eeb-9956-324c3e82167a" />
+
+While we purposefully avoided naming our alias with an existing command name, it is not uncommon to do so. This is often done to apply a commonly desired option to each invocation of a common command.
+To see all the aliases defined in the environment, use the alias command without arguments. Here are some of the aliases defined by default on a Fedora system
+
+There is one tiny problem with defining aliases on the command line. They vanish when our shell session ends.
+
+6 – Redirection
+  The “I/O” stands for input/output and with this facility we can redirect the input and output of commands to and from files, as well as connect multiple commands together into powerful command pipelines.
+  ●  cat – Concatenate files
+  ●  sort – Sort lines of text
+  ●  uniq – Report or omit repeated lines
+  ●  grep – Print lines matching a pattern
+  ●  wc – Print newline, word, and byte counts for each file
+  ●  head – Output the first part of a file
+  ●  tail – Output the last part of a file
+  ●  tee – Read from standard input and write to standard output and files
+Many of the programs that we have used so far produce output of some kind. This output often consists of two types:
+•The program's results, that is, the data the program is designed to produce
+•Status and error messages that tell us how the program is getting along
+Keeping with the Unix theme of “everything is a file,” programs such as ls actually send their results to a special file called standard output (often expressed as stdout) and their status messages to another file called standard error (stderr). By default, both standard output and standard error are linked to the screen and not saved into a disk file.
+
+In addition, many programs take input from a facility called standard input (stdin), which is, by default, attached to the keyboard.
+I/O redirection allows us to change where output goes and where input comes from. Normally, output goes to the screen and input comes from the keyboard, but with I/O redirection, we can change that.
+
+To redirect standard output to another file instead of the screen, we use the > redirection operator followed by the name of the file. Why would we want to do this? It's often useful to store the output of a command in a file.
+<img width="456" height="144" alt="image" src="https://github.com/user-attachments/assets/6831ee73-6c99-4dfb-982f-e3661a8bf038" />
+<img width="611" height="534" alt="image" src="https://github.com/user-attachments/assets/bf4656fe-3f98-4b8e-8d7c-a3ad4cdeb18e" />
+<img width="468" height="66" alt="image" src="https://github.com/user-attachments/assets/27091e16-edd7-407e-a60e-547a5d64e7c1" />
+
+why was the error message displayed on the screen rather than being redirected to the file ls-output.txt? The answer is that the ls program does not send its error messages to standard output. Instead, like most well-written Unix programs, it sends its error messages to standard error (stderr). Since we only redirected standard output and not standard error, the error message was still sent to the screen.
+
+<img width="418" height="50" alt="image" src="https://github.com/user-attachments/assets/c62c6a66-694d-4e2e-8683-4ef19e64da7a" />
+The file now has zero length! This is because when we redirect output with the “>” redirection operator, the destination file is always rewritten from the beginning. Since our ls command generated no results and only an error message, the redirection operation started to rewrite the file and then stopped because of the error, resulting in its truncation.
+if we ever need to actually truncate a file (or create a new, empty file), we can use a trick like this:
+<img width="475" height="275" alt="image" src="https://github.com/user-attachments/assets/8e3ab118-b0fa-4fc8-b0a1-9719e882268c" />
+Simply using the redirection operator with no command preceding it will truncate an existing file or create a new, empty file.
+how can we append redirected output to a file instead of overwriting the file from the beginning?
+<img width="458" height="199" alt="image" src="https://github.com/user-attachments/assets/34de5322-a4f7-48cf-91cf-54fb949dee8b" />
+
+what if we could treat the sequence as a single entity with a single output stream? We can do this by creating a group command. To do this, we surround our sequence with brace characters
+<img width="558" height="106" alt="image" src="https://github.com/user-attachments/assets/20adc3bd-34b3-4439-8e7d-f933a60ec97d" />
+<img width="556" height="104" alt="image" src="https://github.com/user-attachments/assets/6776599b-19f6-479a-9357-3de872efbde4" />
+With our sequence surrounded by braces, the shell will consider it a single command in terms of redirection. Note that the shell requires whitespace around the braces and the final command in the sequence must be terminated with either a semicolon or a newline
+
+Redirecting Standard Error
+Redirecting standard error lacks the ease of a dedicated redirection operator. To redirect standard error we must refer to its file descriptor. A program can produce output on any of several numbered file streams. While we have referred to the first three of these file streams as standard input, output and error, the shell references them internally as file de
+scriptors 0, 1, and 2, respectively. The shell provides a notation for redirecting files using the file descriptor number. Since standard error is the same as file descriptor number 2, we can redirect standard error with this notation
+<img width="287" height="40" alt="image" src="https://github.com/user-attachments/assets/d7bfd7d4-7050-4b53-9eae-9fc99c8e87a7" />
+
+The file descriptor “2” is placed immediately before the redirection operator to perform the redirection of standard error to the file ls-error.txt.
+
+Redirecting Standard Output and Standard Error to One File
+There are cases in which we may want to capture all of the output of a command to a single file. To do this, we must redirect both standard output and standard error at the same time. There are two ways to do this. Shown here is the traditional way, which works with old versions of the shell
+<img width="322" height="43" alt="image" src="https://github.com/user-attachments/assets/e1290099-573e-46d6-af5b-b2f309cfcb67" />
+
+Using this method, we perform two redirections. First we redirect standard output to the file ls-output.txt and then we redirect file descriptor 2 (standard error) to file descriptor 1 (standard output) using the notation 2>&1.
+<img width="318" height="93" alt="image" src="https://github.com/user-attachments/assets/004affdc-d026-4090-b251-e20c93575b95" />
+
+Notice that the order of the redirections is significant. The redirection of standard error must always occur after redirecting standard output or it doesn't work. The following example redirects standard error to the file ls-output.txt:
+  >ls-output.txt 2>&1
+However, if the order is changed to the following, standard error is directed to the screen.
+  2>&1 >ls-output.txt
+
+Recent versions of bash provide a second, more streamlined method for performing this combined redirection shown here
+<img width="321" height="88" alt="image" src="https://github.com/user-attachments/assets/84581529-ce65-43d8-861a-3331a65efa17" />
+
+We can also append the standard output and standard error streams to a single file like so:
+<img width="301" height="134" alt="image" src="https://github.com/user-attachments/assets/1f525e74-e903-418c-9864-16c4e2417a72" />
+
+Disposing of Unwanted Output
+Sometimes “silence is golden,” and we don't want output from a command, we just want to throw it away. This applies particularly to error and status messages. The system provides a way to do this by redirecting output to a special file called “/dev/null”. This file is a system device often referred to as a bit bucket, which accepts input and does nothing with it. To suppress error messages from a command, we do this:
+<img width="406" height="216" alt="image" src="https://github.com/user-attachments/assets/9223ddd9-ecbb-4b77-91b0-8c52f3d3a7ba" />
+
+/dev/null In Unix Culture
+The bit bucket is an ancient Unix concept and because of its universality, it has appeared in many parts of Unix culture. When someone says he/she is sending your comments to /dev/null, now you know what it means. For more examples, see the Wikipedia article on /dev/null .
+
+Redirecting Standard Input
+Up to now, we haven't encountered any commands that make use of standard input (actually we have, but we’ll reveal that surprise a little bit later), so we need to introduce one
+
+cat – Concatenate Files
+The cat command reads one or more files and copies them to standard output. In most cases, we can think of cat as being analogous to the TYPE command in DOS. We can use it to display files without paging.
+<img width="454" height="76" alt="image" src="https://github.com/user-attachments/assets/f6439801-58aa-47c6-8a38-30b4f2a51c38" />
+
+cat is often used to display short text files. Since cat can accept more than one file as an argument, it can also be used to join files together. Say we have downloaded a large file that has been split into multiple parts (multimedia files are often split this way on Usenet), and we want to join them back together.
+
+If cat is not given any arguments, it reads from standard input and since standard input is, by default, attached to the keyboard, it's waiting for us to type something! Try adding the following text and pressing Enter:
+Next, type a Ctrl-d (i.e., hold down the Ctrl key and press “d”) to tell cat that it has reached end of file (EOF) on standard input:
+<img width="670" height="160" alt="image" src="https://github.com/user-attachments/assets/e41d9db4-bfa8-4e60-ab1d-ce4da220ba54" />
+
+<img width="376" height="130" alt="image" src="https://github.com/user-attachments/assets/3dc1d1c8-cde1-4014-adc6-c32250ab3737" />
+
+<img width="371" height="57" alt="image" src="https://github.com/user-attachments/assets/db26c121-ded5-4a78-81ee-159c268d448c" />
+
+Using the command line, we have implemented the world's dumbest word processor!
+
+Pipelines
+The capability of commands to read data from standard input and send to standard output is utilized by a shell feature called pipelines. Using the pipe operator | (vertical bar), the standard output of one command can be piped into the standard input of another.
+  command1 | command2
+
+To fully demonstrate this, we are going to need some commands. Remember how we said there was one we already knew that accepts standard input? It's less. We can use less to display, page by page, the output of any command that sends its results to standard output:
+<img width="223" height="43" alt="image" src="https://github.com/user-attachments/assets/ce6d1342-2f43-451b-91f0-2afcf0ac1aea" />
+
+This is extremely handy! Using this technique, we can conveniently examine the output of any command that produces standard output
+
+The Difference Between > and |
+At first glance, it may be hard to understand the redirection performed by the pipeline operator | versus the redirection operator >. Simply put, the redirection operator connects a command with a file, while the pipeline operator connects the output of one command with the input of a second command.
+command1 > file1
+command1 | command2
+A lot of people will try the following when they are learning about pipelines, “just to see what happens”:
+command1 > command2
+Answer: sometimes something really bad.
+Here is an actual example submitted by a reader who was administering a Linux-based server appliance. As the superuser, he did this:
+# cd /usr/bin
+# ls > less
+The first command put him in the directory where most programs are stored and the second command told the shell to overwrite the file less with the output of the ls command. Since the /usr/bin directory already contained a file named less (the less program), the second command overwrote the less program file with the text from ls, thus destroying the less program on his system.
+The lesson here is that the > redirection operator silently creates or overwrites files, so you need to treat it with a lot of respect.
+
+Filters
+Pipelines are often used to perform complex operations on data. It is possible to put several commands together into a pipeline. Frequently, the commands used this way are referred to as filters. Filters take input, change it somehow, and then output it.
+
+The first one we will try is sort. Imagine we wanted to make a combined list of all the executable programs in /bin and /usr/bin, put them in sorted order and view the resulting list
+<img width="298" height="38" alt="image" src="https://github.com/user-attachments/assets/53065553-7fa4-45f8-9557-e0e36c552df3" />
+Since we specified two directories (/bin and /usr/bin), the output of ls would have consisted of two sorted lists, one for each directory. By including sort in our pipeline, we changed the data to produce a single, sorted list.
+sort is a powerful command with many features and options.
+
+uniq - Report or Omit Repeated Lines
+The uniq command is often used in conjunction with sort. uniq accepts a sorted list of data from either standard input or a single filename argument (see the uniq man page for details) and, by default, removes any duplicates from the list. So, to make sure our list has no duplicates (that is, any programs of the same name that appear in both the /bin and /usr/bin directories), we will add uniq to our pipeline
+<img width="342" height="46" alt="image" src="https://github.com/user-attachments/assets/a092a52c-d881-4cc5-87fb-70874d9fb0a4" />
+
+we use uniq to remove any duplicates from the output of the sort command. If we want to see the list of duplicates instead, we add the “-d” option to uniq like so
+<img width="375" height="42" alt="image" src="https://github.com/user-attachments/assets/25f6170a-4d7f-4956-bd59-29e4a03ef918" />
+
+<img width="275" height="563" alt="image" src="https://github.com/user-attachments/assets/672d07a3-67a1-405e-ab78-2b90dc76f6ed" />
+<img width="252" height="561" alt="image" src="https://github.com/user-attachments/assets/748afa71-b0d7-40ca-827e-f94331bece96" />
+
+wc – Print Line, Word, and Byte Counts
+The wc (word count) command is used to display the number of lines, words, and bytes contained in files.
+<img width="241" height="63" alt="image" src="https://github.com/user-attachments/assets/8410867b-29b1-4805-aedb-326a7b07bdb6" />
+In this case, it prints out three numbers: lines, words, and bytes contained in ls-output.txt.
+<img width="343" height="52" alt="image" src="https://github.com/user-attachments/assets/5c5b5a5c-aca3-484c-b2ad-87d164fbcba3" />
+
+grep – Print Lines Matching a Pattern
+grep is a powerful program used to find text patterns within files. It's used like this:
+grep pattern [file...]
+When grep encounters a “pattern” in the file, it prints out the lines containing it. The patterns that grep can match can be very complex, but for now we will concentrate on simple text matches.
+Let's say we wanted to find all the files in our list of programs that had the word zip embedded in the name. Such a search might give us an idea of some of the programs on our system that had something to do with file compression.
+<img width="366" height="404" alt="image" src="https://github.com/user-attachments/assets/1cdb16db-bcf2-4906-84de-09c0fbd348ad" />
+Here are a few handy options for grep:
+  •  -i, causes grep to ignore case when performing the search (normally searches are case sensitive)
+  •  -l, causes grep to only output the names of the files containing text that matches the pattern.
+  •  -v, causes grep to print only those lines that do not match the pattern.
+  •  -w, causes grep to only match whole words.
+
+head / tail – Print First / Last Part of Files
+  Sometimes we don't want all the output from a command. We may only want the first few lines or the last few lines. The head command prints the first ten lines of a file, and the tail command prints the last ten lines. While both commands print ten lines of text by default, this can be adjusted with the -n option
+<img width="416" height="296" alt="image" src="https://github.com/user-attachments/assets/04d26765-c623-47b2-8ebd-371e28e28db6" />
+These commands can be used in pipelines as well:
+<img width="260" height="123" alt="image" src="https://github.com/user-attachments/assets/2ead7567-9044-4e6c-93ac-1e628d5ce64d" />
+
+Using the -n option with head and tail together allows us to cut an excerpt from the middle of a file. Let’s imagine we have a text file with a 5 line header and a 5 line footer that we want to remove leaving only the “good” part in the middle containing the data.
+<img width="426" height="83" alt="image" src="https://github.com/user-attachments/assets/328f5146-ff62-4746-9eeb-3ae49300eb8e" />
+The -n option when used with head allows a negative value which causes all but the last n lines to be output. Similarly, the -n option with tail allows a plus sign causing all but the first n lines to be output.
+
+tail also has an option which allows us to follow the contents of a file in real time. This is useful for watching the progress of log files as they are being written. In the following example, we will look at the messages file in /var/log (or the /var/log/syslog file if messages is missing). Superuser privileges may be required to do this on some Linux distributions because log files may contain security information
+<img width="634" height="72" alt="image" src="https://github.com/user-attachments/assets/8cec148f-1d5d-4d66-83f6-c705114c6aeb" />
+<img width="603" height="215" alt="image" src="https://github.com/user-attachments/assets/43d6ddf0-4abb-4094-974e-f912d51b5c97" />
+
+tee – Read from Stdin and Output to Stdout and Files
+In keeping with our plumbing metaphor, Linux provides a command called tee which creates a “tee” fitting on our pipe. The tee program reads standard input and copies it to both standard output (allowing the data to continue down the pipeline) and to one or more files. This is useful for capturing a pipeline's contents at an intermediate stage of processing.
+
+<img width="331" height="488" alt="image" src="https://github.com/user-attachments/assets/6e6d5742-9b55-4ee5-89f2-383887ba1ee2" />
+<img width="295" height="537" alt="image" src="https://github.com/user-attachments/assets/72dc4283-475d-4907-8fbc-39ca1a1bb4a3" />
+did this through root
+
+Linux Is About Imagination
+When I am asked to explain the difference between Windows and Linux, I often use a toy analogy.
+Windows is like a Game Boy. You go to the store and buy one all shiny new in the box. You take it home, turn it on, and play with it. Pretty graphics, cute sounds. After a while, though, you get tired of the game that came with it, so you go back to the store and buy another one. This cycle repeats over and over. Finally, you go back to the store and say to the person behind the counter, “I want a game that does this!” only to be told that no such game exists because there is no “market demand” for it. Then you say, “But I only need to change this one thing!” The person behind the counter says you can't change it. The games are all sealed up in their cartridges. You discover that your toy is limited to the games others have decided that you need.
+Linux, on the other hand, is like the world's largest Erector Set. You open it, and it's just a huge collection of parts. There's a lot of steel struts, screws, nuts, gears, pulleys, motors, and a few suggestions on what to build. So, you start to play with it. You build one of the suggestions and then another. After a while you discover that you have your own ideas of what to make. You don't ever have to go back to the store, as you already have everything you need. The Erector Set takes on the shape of your imagination. It does what you want.
+Your choice of toys is, of course, a personal thing, so which toy would you find more satisfying?
+
+7 – Seeing the World as the Shell Sees It
+  ●  echo – Display a line of text
+**Expansion**
+Each time we type a command and press the Enter key, bash performs several substitutions upon the text before it carries out our command.
+for example *, can have a lot of meaning to the shell. The process that makes this happen is called expansion. With expansion, we enter something and it is expanded into something else before the shell acts upon it.
+<img width="655" height="147" alt="image" src="https://github.com/user-attachments/assets/f5d6992e-c20c-4e10-bc88-4d4a6222d308" />
+Why didn't echo print *? As we recall from our work with wildcards, the * character means match any characters in a filename, but what we didn't see in our original discussion was how the shell does that. The simple answer is that the shell expands the * into something else (in this instance, the names of the files in the current working directory) before the echo command is executed.
+
+Pathname Expansion
+The mechanism by which wildcards work is called pathname expansion.
+<img width="545" height="347" alt="image" src="https://github.com/user-attachments/assets/59e1af58-78eb-480c-9508-adf7be9bed53" />
+
+Pathname Expansion of Hidden Files
+As we know, filenames that begin with a period character are hidden. Pathname expansion also respects this behavior. An expansion such as the following does not reveal hidden files.
+echo *
+It might appear at first glance that we could include hidden files in an expansion by starting the pattern with a leading period, like this:
+echo .*
+It almost works. However, if we examine the results closely, we will see that the names . and .. will also appear in the results. Because these names refer to the current working directory and its parent directory, using this pattern will likely produce an incorrect result. We can see this if we try the following command:
+ls -d .* | less
+To better perform pathname expansion in this situation, we have to employ a more specific pattern.
+echo .[!.]*
+This pattern expands into every filename that begins with only one period followed by any other characters. This will work correctly with most hidden files (though it still won't include filenames with multiple leading periods). The ls command with the -A option (“almost all”) will provide a correct listing of hidden files.
+ls -A
+<img width="654" height="494" alt="image" src="https://github.com/user-attachments/assets/5a12f61f-045c-423e-a1da-a462f6dd8de4" />
+<img width="530" height="391" alt="image" src="https://github.com/user-attachments/assets/a139d928-b80d-4f07-b311-cc0cf9a0b80f" />
+
+Tilde Expansion
+As we may recall from our introduction to the cd command, the tilde character (~) has a special meaning. When used at the beginning of a word, it expands into the name of the home directory of the named user or, if no user is named, the home directory of the current user
+<img width="211" height="65" alt="image" src="https://github.com/user-attachments/assets/c813bdc6-5060-4046-84db-b9b19e1fd47f" />
+
+Arithmetic Expansion
+The shell allows arithmetic to be performed by expansion.
+
+<img width="201" height="120" alt="image" src="https://github.com/user-attachments/assets/3759218c-3e6a-4342-b7cf-52de66f99073" />
+Arithmetic expansion supports only integers (whole numbers, no decimals) but can perform quite a number of different operations.
+
+<img width="837" height="345" alt="image" src="https://github.com/user-attachments/assets/5b6e32d1-604b-4c3a-9ec5-d7aefd86a563" />
+Arithmetic expansion uses the following form:
+$((expression))
+
+<img width="241" height="115" alt="image" src="https://github.com/user-attachments/assets/7c29b91b-c5d8-4e33-ba93-aa46bfae2e19" />
+
+<img width="350" height="118" alt="image" src="https://github.com/user-attachments/assets/9a62d64e-e1c3-44e5-a0fc-b2be9529142a" />
+
+Brace Expansion
+Perhaps the strangest expansion is called brace expansion. With it, we can create multiple text strings from a pattern containing braces
+
+<img width="485" height="373" alt="image" src="https://github.com/user-attachments/assets/dd2ea9e9-8892-4a2e-b825-5742ae4ef946" />
+So, what is this good for? The most common application is making lists of files or directories to be created
+<img width="646" height="364" alt="image" src="https://github.com/user-attachments/assets/b0897481-bbcc-4074-8837-d4b589d06682" />
+
+Parameter Expansion
+It's a feature that is more useful in shell scripts than directly on the command line. Many of its capabilities have to do with the system's ability to store small chunks of data and to give each chunk a name. Many such chunks, more properly called variables, are available for our examination. For example, the variable named USER contains our username.
+
+<img width="222" height="108" alt="image" src="https://github.com/user-attachments/assets/5578e144-3037-48e5-afe0-68aeb21a3255" />
+<img width="367" height="92" alt="image" src="https://github.com/user-attachments/assets/117c5fa1-fb91-4c8c-b88e-165a77636f14" />
+<img width="239" height="112" alt="image" src="https://github.com/user-attachments/assets/876b7b52-aa8e-42b5-a2ee-6d9bacb20c18" />
+
+Command Substitution
+Command substitution allows us to use the output of a command as an expansion.
+
+<img width="614" height="142" alt="image" src="https://github.com/user-attachments/assets/aa887999-196c-4bb1-a2b6-ab5042b12fa5" /> 
+Here we passed the results of which cp as an argument to the ls command, thereby getting the listing of the cp program without having to know its full pathname. We are not limited to just simple commands. Entire pipelines can be used
+
+<img width="658" height="500" alt="image" src="https://github.com/user-attachments/assets/76cfd6ec-0110-47c4-a63f-65a8405183d4" />
+In this example, the results of the pipeline became the argument list of the file command.
+There is an alternate syntax for command substitution used by older shell programs that is also supported in bash. It uses backquotes instead of the dollar sign and parentheses.
+
+<img width="458" height="59" alt="image" src="https://github.com/user-attachments/assets/759baa7e-0ce1-4e03-a608-c1113f99f7e1" />
+
+Quoting
+Now that we've seen how many ways the shell can perform expansions, it's time to learn how we can control it.
+
+<img width="360" height="123" alt="image" src="https://github.com/user-attachments/assets/4449b45d-8ff3-41c2-9d13-4725afb4ea8f" />
+In the first example, word-splitting by the shell removed extra whitespace from the echo command's list of arguments. In the second example, parameter expansion substituted an empty string for the value of $1 because it was an undefined variable. The shell provides a mechanism called quoting to selectively suppress unwanted expansions.
+
+Double Quotes
+The first type of quoting we will look at is double quotes. If we place text inside double quotes, all the special characters used by the shell lose their special meaning and are treated as ordinary characters. The exceptions are $, \ (backslash), and ` (back-quote). This means that word-splitting, pathname expansion, tilde expansion, and brace expansion are suppressed, but parameter expansion, arithmetic expansion, and command substitution are still carried out. Using double quotes, we can cope with filenames containing embedded spaces.
+
+<img width="461" height="253" alt="image" src="https://github.com/user-attachments/assets/f95bc0a3-736e-4df0-b0ad-a0910b3d93eb" />
+<img width="649" height="278" alt="image" src="https://github.com/user-attachments/assets/9a5b138d-0c5e-4690-941e-699dfacb64d7" />
+<img width="288" height="121" alt="image" src="https://github.com/user-attachments/assets/5ef743d5-8e34-4898-a851-1472b21ea816" />
+
+The fact that newlines are considered delimiters by the word-splitting mechanism causes an interesting, albeit subtle, effect on command substitution.
+
+<img width="659" height="484" alt="image" src="https://github.com/user-attachments/assets/dcc49d94-abf0-4c8e-b855-211aeae9b100" />
+In the first instance, the unquoted command substitution resulted in a command line containing 49 arguments. In the second, it resulted in a command line with one argument that includes the embedded spaces and newlines.
+
+Single Quotes
+If we need to suppress all expansions, we use single quotes. Here is a comparison of unquoted, double quotes, and single quotes:
+
+<img width="655" height="196" alt="image" src="https://github.com/user-attachments/assets/4ff94886-0f3e-44be-b389-7f0eddc32138" />
+As we can see, with each succeeding level of quoting, more and more of the expansions are suppressed.
+
+Escaping Characters
+Sometimes we want to quote only a single character. To do this, we can precede a character with a backslash, which in this context is called the escape character. Often this is done inside double quotes to selectively prevent an expansion.
+
+<img width="417" height="58" alt="image" src="https://github.com/user-attachments/assets/e3ff7b15-b8ab-4f4c-998a-fc7a5732b230" />
+
+It is also common to use escaping to eliminate the special meaning of a character in a filename. For example, it is possible to use characters in filenames that normally have special meaning to the shell. These would include $, !, &, spaces, and others. To include a special character in a filename we can do this:
+mv bad\&filename good_filename
+
+To allow a backslash character to appear, escape it by typing \\. Note that within single quotes, the backslash loses its special meaning and is treated as an ordinary character.
+Another use of the backslash escape is suppressing aliases. For example, assuming the ls command is aliased to ls=’ls --color=auto’, the default on many Linux distributions, we can precede the command with a backslash and the alias will be ignored and the ls command will be executed without the color option.
+
+Backslash Escape Sequences
+In addition to its role as the escape character, the backslash is also used as part of a notation to represent certain special characters called control codes. The first 32 characters in the ASCII coding scheme are used to transmit commands to teletype-like devices. Some of these codes are familiar (tab, backspace, linefeed, and carriage return), while others are not (null, end-of-transmission, and acknowledge).
+
+<img width="707" height="289" alt="image" src="https://github.com/user-attachments/assets/42e525f4-baf1-4f7f-8c43-0e9a8bbb1a4b" />
+The table above lists some of the common backslash escape sequences. The idea behind this representation using the backslash originated in the C programming language and has been adopted by many others, including the shell.
+Adding the -e option to echo will enable interpretation of escape sequences. You may also place them inside $' '. Here, using the sleep command, a simple program that just waits for the specified number of seconds and then exits, we can create a primitive countdown timer:
+sleep 10; echo -e "Time's up\a"
+We could also do this:
+sleep 10; echo "Time's up" $'\a'
+
+Without a proper understanding of expansion, the shell will always be a source of mystery and confusion, with much of its potential power wasted.
 
