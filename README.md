@@ -690,3 +690,186 @@ sleep 10; echo "Time's up" $'\a'
 
 Without a proper understanding of expansion, the shell will always be a source of mystery and confusion, with much of its potential power wasted.
 
+8 – Advanced Keyboard Tricks
+  ●  clear – Clear the screen
+  ●  history – Display the contents of the history list
+
+Command Line Editing
+bash uses a library (a shared collection of routines that different programs can use) called Readline to implement command line editing.
+Think of these as additional tools that we can employ in our work. It’s not important to learn all of them, but many of them are very useful. Pick and choose as desired.
+
+Note: Some of the key sequences below (particularly those that use the Alt key) may be intercepted by the GUI for other functions. All of the key sequences should work properly when using a virtual console.
+
+Cursor Movement
+The following table lists the keys used to move the cursor:
+<img width="777" height="313" alt="image" src="https://github.com/user-attachments/assets/54ffa3bf-5b61-42bd-ae04-14b68de7db02" />
+
+Modifying Text
+Since we might make a mistake when composing a command, we need a way to correct them efficiently.
+<img width="836" height="363" alt="image" src="https://github.com/user-attachments/assets/34a1737e-981e-4215-ae6b-3ae179526d3a" />
+
+Cutting and Pasting (Killing and Yanking) Text
+The Readline documentation uses the terms killing and yanking to refer to what we would commonly call cutting and pasting. Items that are cut are stored in a buffer (a temporary storage area in memory) called the kill-ring
+<img width="786" height="329" alt="image" src="https://github.com/user-attachments/assets/681f2762-a0a3-4bea-a968-8e91ad448c2d" />
+
+The Meta Key
+If you venture into the Readline documentation, which can be found in the “READLINE” section of the bash man page, you will encounter the term meta key. On modern keyboards this maps to the Alt key but it wasn't always so.
+Back in the dim times (before PCs but after Unix), not everybody had their own computer. What they might have had was a device called a terminal. A terminal was a communication device that featured a text display screen and a keyboard and just enough electronics inside to display text characters and move the cursor around. It was attached (usually by serial cable) to a larger computer or the communication network of a larger computer. There were many different brands of terminals, and they all had different keyboards and display feature sets. Since they all tended to at least understand ASCII, software developers wanting portable applications wrote to the lowest common denominator. Unix systems have an elaborate way of dealing with terminals and their different display features. Since the developers of Readline could not be sure of the presence of a dedicated extra control key, they invented one and called it meta. While the Alt key serves as the meta key on modern keyboards, you can also press and release the Esc key to get the same effect as holding down the Alt key if you're using a terminal (which you can still do in Linux!).
+
+Completion
+Another way that the shell can help us is through a mechanism called completion. Completion occurs when we press the tab key while typing a command.
+While this example shows completion of pathnames, which is its most common use, completion will also work on variables (if the beginning of the word is a $), user names (if the word begins with ~), commands (if the word is the first word on the line) and hostnames (if the beginning of the word is @). Hostname completion works only for hostnames listed in /etc/hosts.
+<img width="425" height="126" alt="image" src="https://github.com/user-attachments/assets/cd0176d4-5d80-4869-b410-2c6c459f433b" />
+
+There are a number of control and meta key sequences that are associated with completion
+<img width="807" height="234" alt="image" src="https://github.com/user-attachments/assets/0d8e88a2-aea1-48ab-85bc-66a71cfcc8c0" />
+There are quite a few more that are rather obscure. A list appears in the bash man page under “READLINE”.
+
+Programmable Completion
+Recent versions of bash have a facility called programmable completion. Programmable completion allows you (or more likely, your distribution provider) to add additional completion rules. Usually this is done to add support for specific applications. For example, it is possible to add completions for the option list of a command or match particular file types that an application supports. Ubuntu has a fairly large set defined by default. Programmable completion is implemented by shell functions, a kind of mini shell script that we will cover in later chapters. If you are curious, try the following:
+set | less
+and see if you can find them. Not all distributions include them by default.
+
+Using History
+bash maintains a history of commands that have been entered. This list of commands is kept in our home directory in a file called .bash_history. The history facility is a useful resource for reducing the amount of typing we have to do, especially when combined with command line editing.
+
+Searching History
+At any time, we can view the contents of the history list by doing the following:
+<img width="166" height="46" alt="image" src="https://github.com/user-attachments/assets/d7d80213-b92b-4244-a7f4-b7eaf9c9f06b" />
+<img width="281" height="536" alt="image" src="https://github.com/user-attachments/assets/b39ce5f3-2869-42c3-989e-5be15aa10786" />
+
+By default, most modern Linux distributions configure bash to store the last 1000 commands we have entered. We will see how to adjust this value
+
+let's say that among our results we got a line containing an interesting command like this:
+88 ls -l /usr/bin > ls-output.txt
+The 88 is the line number of the command in the history list. We could use this immediately using another type of expansion called history expansion.
+<img width="301" height="95" alt="image" src="https://github.com/user-attachments/assets/d1ff9c0b-d48d-4fd2-94f8-a6b73b3d9085" />
+
+bash also provides the ability to search the history list incrementally. This means we can tell bash to search the history list as we enter characters, with each additional character further refining our search. To start incremental search press Ctrl-r followed by the text we are looking for. When we find it, we can either press Enter to execute the command or press Ctrl-j to copy the line from the history list to the current command line. To find the next occurrence of the text (moving “up” the history list), press Ctrl-r again. To quit searching, press either Ctrl-g or Ctrl-c.
+<img width="291" height="155" alt="image" src="https://github.com/user-attachments/assets/f39a8816-af00-4c31-af7a-a01ebc5ef9fe" />
+<img width="839" height="525" alt="image" src="https://github.com/user-attachments/assets/0425d8d6-0061-4c07-80f4-69772caf2f2a" />
+
+History Expansion
+The shell offers a specialized type of expansion for items in the history list by using the ! character. We have already seen how the exclamation point can be followed by a number to insert an entry from the history list. There are a number of other expansion features, as described in Table
+<img width="817" height="264" alt="image" src="https://github.com/user-attachments/assets/52098944-0c5d-445c-9d97-d05f8015aed4" />
+
+Use caution with the !string and !?string forms unless youyou are absolutely sure of the contents of the history list items. We can mitigate this problem somewhat by appending “:p” to our expansion. This tells the shell to print the result of the expansion and place it into the command history.
+<img width="288" height="288" alt="image" src="https://github.com/user-attachments/assets/0d8cc9e2-cea9-4f2f-aa3b-5bc3f9ad7f9e" />
+
+script
+In addition to the command history feature in bash, most Linux distributions include a program called script that can be used to record an entire shell session and store it in a file. The basic syntax of the command is as follows:
+script [file]
+where file is the name of the file used for storing the recording. If no file is specified, the file typescript is used. See the script man page for a complete list of the program’s options and features.
+
+9 – Permissions
+Operating systems in the Unix tradition differ from those in the MS-DOS tradition in that they are not only multitasking systems, but also multi-user systems. It means that more than one person can be using the computer at the same time.
+if a computer is attached to a network or the Internet, remote users can log in via ssh (secure shell) and operate the computer
+multi-user capability of Linux is not a recent "innovation," but rather a feature that is deeply embedded into the design of the operating system.
+A typical university computer system, for example, consisted of a large central computer located in one building and terminals that were located throughout the campus, each connected to the large central computer.
+To make this practical, a method had to be devised to protect the users from each other. After all, the actions of one user could not be allowed to crash the computer, nor could one user interfere with the files belonging to another use. we will look at this essential part of system security
+  ●  id – Display user identity
+  ●  chmod – Change a file's mode
+  ●  umask – Set the default file permissions
+  ●  su – Run a shell as another user
+  ●  sudo – Execute a command as another user
+  ●  chown – Change a file's owner
+  ●  chgrp – Change a file's group ownership
+  ●  addgroup – Add a user or a group to the system
+  ●  usermod – Modify a user account
+  ●  passwd – Change a user's password
+we may have encountered a problem when trying to examine a file such as /etc/shadow
+<img width="368" height="113" alt="image" src="https://github.com/user-attachments/assets/5e69ab1f-86b4-4f68-8127-259ef9cb4634" />
+
+In the Unix security model, a user may own files and directories. When a user owns a file or directory, the user has control over its access. Users can, in turn, belong to a group consisting of one or more users who are given access to files and directories by their owners. In addition to granting access to a group, an owner may also grant some set of access rights to everybody, which are called others (sometimes referred to as the world). To find information about our identity, we use the id command.
+<img width="654" height="82" alt="image" src="https://github.com/user-attachments/assets/0384cef5-1da9-496b-b054-1d014c6a668a" />
+
+User accounts are defined in the /etc/passwd file and groups are defined in the /etc/group file. When user accounts and groups are created, these files are modified along with /etc/shadow which holds information about the user's password. For each user account, the /etc/passwd file defines the user (login) name, uid, gid, user’s real name, home directory, and login shell. If we examine the contents of /etc/passwd and /etc/group, we notice that besides the regular user accounts, there are accounts for the superuser (always uid 0) and various other system users. when we cover processes, we will see that some of these other “users” are, in fact, quite busy.
+While many Unix-like systems assign regular users to a common group such as “users”, modern Linux practice is to create a unique, single-member group with the same name as the user. This makes certain types of permission assignment easier.
+
+Reading, Writing, and Executing
+Access rights to files and directories are defined in terms of read access, write access, and execution access.
+<img width="374" height="117" alt="image" src="https://github.com/user-attachments/assets/b0b472cf-e84a-43fb-8f4f-47419a549dda" />
+The first 10 characters of the listing are the file attributes. The first of these characters is the file type.
+<img width="833" height="224" alt="image" src="https://github.com/user-attachments/assets/08797f5c-b1a6-47fe-add0-3bf4caf8a0c5" />
+<img width="775" height="190" alt="image" src="https://github.com/user-attachments/assets/2ce1bfa6-cf9e-406a-9eb7-c93e5bfef92d" />
+The remaining nine characters of the file attributes, called the file mode, represent the read, write, and execute permissions for the file's owner, the file's group owner, and everybody else.
+<img width="451" height="118" alt="image" src="https://github.com/user-attachments/assets/b5efc33d-fbe8-40bf-956f-6704d569f0b5" />
+<img width="852" height="582" alt="image" src="https://github.com/user-attachments/assets/1d290d6e-1861-457b-a21e-7e27540088e9" /> .. to the directory
+
+<img width="658" height="601" alt="image" src="https://github.com/user-attachments/assets/fe67bd7f-dcbf-48e1-a711-578bfc5551de" />
+
+chmod – Change File Mode
+To change the mode (permissions) of a file or directory, the chmod command is used. Be aware that only the file’s owner or the superuser can change the mode of a file or directory. chmod supports two distinct ways of specifying mode changes: octal number representation, or symbolic representation.
+
+What the Heck is Octal?
+Octal (base 8), and its cousin, hexadecimal (base 16) are number systems often used to express numbers on computers. We humans, owing to the fact that we (or at least most of us) were born with 10 fingers, count using a base 10 number system. Computers, on the other hand, were born with only one finger and thus do all their counting in binary (base 2). Their number system has only two numerals, 0 and 1. So, in binary, counting looks like this:
+0, 1, 10, 11, 100, 101, 110, 111, 1000, 1001, 1010, 1011...
+In octal, counting is done with the numerals zero through seven, like so:
+0, 1, 2, 3, 4, 5, 6, 7, 10, 11, 12, 13, 14, 15, 16, 17, 20, 21...
+Hexadecimal counting uses the numerals zero through nine plus the letters “A” through “F”:
+0, 1, 2, 3, 4, 5, 6, 7, 8, 9, A, B, C, D, E, F, 10, 11, 12, 13...
+While we can see the sense in binary (since computers have only one finger), what are octal and hexadecimal good for? The answer has to do with human convenience. Many times, small portions of data are represented on computers as bit patterns. Take for example an RGB color. On most computer displays, each pixel is composed of three color components: eight bits of red, eight bits of green, and eight bits of blue. A lovely medium blue would be a 24 digit number:
+010000110110111111001101
+How would you like to read and write those kinds of numbers all day? I didn't think so. Here's where another number system would help. Each digit in a hexadecimal number represents four digits in binary. In octal, each digit represents three binary digits. So our 24 digit medium blue could be condensed to a six-digit hexadecimal number:
+436FCD
+Since the digits in the hexadecimal number “line up” with the bits in the binary number, we can see that the red component of our color is 43, the green 6F, and the blue CD.
+These days, hexadecimal notation (often referred to as “hex”) is more common than octal, but as we will soon see, octal's ability to express three bits of binary will be very useful...
+
+With octal notation, we use octal numbers to set the pattern of desired permissions. Since each digit in an octal number represents three binary digits, this maps nicely to the scheme used to store the file mode.
+
+<img width="773" height="431" alt="image" src="https://github.com/user-attachments/assets/fbcf0fb3-a414-4df6-9802-6852a165f180" />
+
+<img width="363" height="238" alt="image" src="https://github.com/user-attachments/assets/03c8f78a-9236-4ae9-a645-178fff6eb7a2" />
+
+By passing the argument “600”, we were able to set the permissions of the owner to read and write while removing all permissions from the group owner and others. Though remembering the octal to binary mapping may seem inconvenient, we will usually have only to use a few common ones: 7 (rwx), 6 (rw-), 5 (r-x), 4 (r--), and 0 (---)
+
+chmod also supports a symbolic notation for specifying file modes. Symbolic notation is divided into three parts.
+  •  Who the change will affect
+  •  Which operation will be performed
+  •  What permission will be set.
+To specify who is affected, a combination of the characters “u”, “g”, “o”, and “a” is used
+<img width="933" height="271" alt="image" src="https://github.com/user-attachments/assets/fce85611-53c2-4c20-ae2c-15cc3d4b90f4" />
+
+If no character is specified, “all” will be assumed. The operation may be a “+” indicating that a permission is to be added, a “-” indicating that a permission is to be taken away, or a “=” indicating that only the specified permissions are to be applied and that all others are to be removed.
+Permissions are specified with the “r”, “w”, and “x” characters.
+<img width="929" height="538" alt="image" src="https://github.com/user-attachments/assets/22821c9e-ba7d-4bb4-a29f-7c6fc2287817" />
+
+Some people prefer to use octal notation, and some folks really like the symbolic. Symbolic notation does offer the advantage of allowing us to set a single attribute without disturbing any of the others.
+
+A word of caution regarding the “--recursive” option: it acts on both files and directories, so it's not as useful as we would hope since we rarely want files and directories to have the same permissions.
+
+umask – Set Default Permissions
+The umask command controls the default permissions given to a file when it is created. It uses octal notation to express a mask of bits to be removed from a file's mode attributes.
+<img width="377" height="238" alt="image" src="https://github.com/user-attachments/assets/e05a617e-e75e-45e8-9e5d-8a8c14aa18eb" />
+We first removed any old copy of foo.txt to make sure we were starting fresh. Next, we ran the umask command without an argument to see the current value. It responded with the value 0002 (the value 0022 is another common default value), which is the octal representation of our mask. We next create a new instance of the file foo.txt and observe its permissions.
+We can see that both the user and group get read and write permission, while everyone else only gets read permission. The reason that world does not have write permission is because of the value of the mask.
+<img width="374" height="217" alt="image" src="https://github.com/user-attachments/assets/1fe7f50f-946e-41a0-bcc4-1346bed234ec" />
+When we set the mask to 0000 (effectively turning it off), we see that the file is now world writable. To understand how this works, we have to look at octal numbers again. If we change the mask to 0002, expand it into binary, and then compare it to the attributes
+<img width="623" height="141" alt="image" src="https://github.com/user-attachments/assets/b955471d-8597-4ff0-8295-86af54d7fbd5" />
+
+Ignore for the moment the leading zeros (we'll get to those in a minute) and observe that where the 1 appears in our mask, an attribute was removed — in this case, the world write permission. That's what the mask does. Everywhere a 1 appears in the binary value of the mask, an attribute is unset. If we look at a mask value of 0022
+<img width="619" height="129" alt="image" src="https://github.com/user-attachments/assets/3df94ca1-b29a-44c4-8745-72123ccb6e88" />
+Most of the time we won't have to change the mask; the default provided by the distribution will be fine. In some high-security situations, however, we will want to control it.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
