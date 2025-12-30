@@ -851,15 +851,35 @@ Ignore for the moment the leading zeros (we'll get to those in a minute) and obs
 <img width="619" height="129" alt="image" src="https://github.com/user-attachments/assets/3df94ca1-b29a-44c4-8745-72123ccb6e88" />
 Most of the time we won't have to change the mask; the default provided by the distribution will be fine. In some high-security situations, however, we will want to control it.
 
+Some Special Permissions
+Though we usually see an octal permission mask expressed as a three-digit number, it is more technically correct to express it in four digits. Why? Because, in addition to read, write, and execute permission, there are some other, less used, permission settings.
+The first of these is the setuid bit (octal 4000). When applied to an executable file, it sets the effective user ID from that of the real user (the user actually running the program) to that of the program's owner. Most often this is given to a few programs owned by the superuser. When an ordinary user runs a program that is “setuid root” , the program runs with the effective privileges of the superuser. This allows the program to access files and directories that an ordinary user would normally be prohibited from accessing. Clearly, because this raises security concerns, the number of setuid programs must be held to an absolute minimum.
+The second less-used setting is the setgid bit (octal 2000), which, like the setuid bit, changes the effective group ID from the real group ID of the real user to that of the file owner. If the setgid bit is set on a directory, newly created files in the directory will be given the group ownership of the directory rather the group ownership of the file's creator. This is useful in a shared directory when members of a common group need access to all the files in the directory, regardless of the file owner's primary group.
+The third is called the sticky bit (octal 1000). This is a holdover from ancient Unix, where it was possible to mark an executable file as “not swappable.” On files, Linux ignores the sticky bit, but if applied to a directory, it prevents users from deleting or renaming files unless the user is either the owner of the directory, the owner of the file, or the superuser. This is often used to control access to a shared directory, such as /tmp.
+Here are some examples of using chmod with symbolic notation to set these special permissions. Here’s an example of assigning setuid to a program:
+chmod u+s program
+Next, here’s and example of assigning setgid to a directory:
+chmod g+s dir
+Finally, here’s an example of assigning the sticky bit to a directory:
+chmod +t dir
+When viewing the output from ls, you can determine the special permissions. Here are some examples. First, an example of a program that is setuid:
+-rwsr-xr-x
+Here’s an example of a directory that has the setgid attribute:
+drwxrwsr-x
+Here’s an example of a directory with the sticky bit set:
+drwxrwxrwt
 
+Often we want to gain superuser privileges to carry out some administrative task, but it is also possible to “become” another regular user for such things as testing an account. There are three ways to take on an alternate identity.
+  1.  Log out and log back in as the alternate user.
+  2.  Use the su command.
+  3.  Use the sudo command.
 
+From within our own shell session, the su command allows us to assume the identity of another user and either start a new shell session with that user's ID, or to issue a single command as that user. The sudo command allows an administrator to set up a configuration file called /etc/sudoers and define specific commands that particular users are permitted to execute under an assumed identity. The choice of which command to use is largely determined by which Linux distribution you use. Be aware that the use of su is falling out of favor in modern Linux distributions.
 
-
-
-
-
-
-
+su – Run a Shell with Substitute User and Group IDs
+The su command is used to start a shell as another user. The command syntax looks like this:
+su [-[l]] [user]
+If the “-l” option is included, the resulting shell session is a login shell for the specified user. This means the user's environment is loaded and the working directory is changed to the user's home directory. This is usually what we want. If the user is not specified, the superuser is assumed. Notice that (strangely) the -l may be abbreviated as -, which is how it is most often used. Assuming that the root account has a password set (which is not the custom in modern distributions) we can start a shell for the superuser this way
 
 
 
