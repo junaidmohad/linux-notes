@@ -881,6 +881,39 @@ The su command is used to start a shell as another user. The command syntax look
 su [-[l]] [user]
 If the “-l” option is included, the resulting shell session is a login shell for the specified user. This means the user's environment is loaded and the working directory is changed to the user's home directory. This is usually what we want. If the user is not specified, the superuser is assumed. Notice that (strangely) the -l may be abbreviated as -, which is how it is most often used. Assuming that the root account has a password set (which is not the custom in modern distributions) we can start a shell for the superuser this way
 
+<img width="224" height="73" alt="image" src="https://github.com/user-attachments/assets/4fd5a2e0-ef01-451f-b4c6-84bd17948b6c" />
+
+It is also possible to execute a single command rather than starting a new interactive command by using su this way.
+su -c 'command'
+Using this form, a single command line is passed to the new shell for execution. It is important to enclose the command in quotes, as we do not want expansion to occur in our shell, but rather in the new shell
+
+<img width="506" height="143" alt="image" src="https://github.com/user-attachments/assets/969c3603-345b-43f2-bf17-a629bf1b424c" />
+
+
+sudo – Execute a Command as Another User
+The sudo command is like su in many ways but has some important additional capabilities. The administrator can configure sudo to allow an ordinary user to execute commands as a different user (usually the superuser) in a controlled way. In particular, a user may be restricted to one or more specific commands and no others. Another important difference is that the use of sudo does not require access to the superuser's password. Authenticating using sudo, requires the user’s own password
+<img width="319" height="74" alt="image" src="https://github.com/user-attachments/assets/2bf90e24-2704-493d-8607-527231a9e617" />
+After entering the command, we are prompted for our password (not the superuser's) and once the authentication is complete, the specified command is carried out. One important difference between su and sudo is that sudo does not start a new shell, nor does it load another user's environment. This means that commands do not need to be quoted any differently than they would be without using sudo. Note that this behavior can be overridden by specifying various options. Note, too, that sudo can be used to start an interactive superuser session (much like su -) by using the -i option.
+To see what privileges are granted by sudo, use the -l option to list them
+<img width="659" height="169" alt="image" src="https://github.com/user-attachments/assets/0ac7ffd9-2023-4be0-a0d7-f4a03576037b" />
+
+Modern Linux Distributions and sudo
+One of the recurrent problems for regular users is how to perform certain tasks that require superuser privileges. These tasks include installing and updating software, editing system configuration files, and accessing devices. In the Windows world, this is often done by giving users administrative privileges. This allows users to perform these tasks. However, it also enables programs executed by the user to have the same abilities. This is desirable in most cases, but it also permits malware (malicious software) such as viruses to have free rein of the computer.
+In the Unix world, there has always been a larger division between regular users and administrators, owing to the multiuser heritage of Unix. The approach taken in Unix is to grant superuser privileges only when needed. To do this, the su and sudo commands are commonly used.
+Years ago, most Linux distributions relied on su for this purpose. su didn't require the configuration that sudo required, and having a root account is traditional in Unix. This, however introduced a problem. Users were tempted to operate as root unnecessarily. In fact, some users operated their systems as the root user exclusively, since it does away with all those annoying “permission denied” messages. This is how you reduce the security of a Linux system to that of a Windows system. Not a good idea.
+When Ubuntu was introduced, its creators took a different tack. By default, Ubuntu disables logins to the root account (by failing to set a password for the account) and instead uses sudo to grant superuser privileges. The initial user account is granted full access to superuser privileges via sudo and may grant similar powers to subsequent user accounts. This method of granting privileges is now the accepted standard is most modern distributions.
+
+chown – Change File Owner and Group
+The chown command is used to change the owner and group owner of a file or directory. Superuser privileges are required to use this command.
+
+chown [owner][:[group]] file...
+
+chown can change the file owner and/or the file group owner depending on the first argument of the command.
+<img width="998" height="430" alt="image" src="https://github.com/user-attachments/assets/3e990c1f-c97c-41f7-a746-b516a90d0389" />
+Let's say we have two users; janet, who has access to superuser privileges and tony, who does not. User janet wants to copy a file from her home directory to the home directory of user tony. Since user janet wants tony to be able to edit the file, janet changes the ownership of the copied file from janet to tony.
+<img width="502" height="471" alt="image" src="https://github.com/user-attachments/assets/e15f3ead-b9f0-4ea8-84e8-4f2fcdcbfaef" />
+
+
 
 
 
