@@ -896,6 +896,8 @@ The sudo command is like su in many ways but has some important additional capab
 After entering the command, we are prompted for our password (not the superuser's) and once the authentication is complete, the specified command is carried out. One important difference between su and sudo is that sudo does not start a new shell, nor does it load another user's environment. This means that commands do not need to be quoted any differently than they would be without using sudo. Note that this behavior can be overridden by specifying various options. Note, too, that sudo can be used to start an interactive superuser session (much like su -) by using the -i option.
 To see what privileges are granted by sudo, use the -l option to list them
 <img width="659" height="169" alt="image" src="https://github.com/user-attachments/assets/0ac7ffd9-2023-4be0-a0d7-f4a03576037b" />
+<img width="182" height="77" alt="image" src="https://github.com/user-attachments/assets/33461aaf-8613-44ef-9be5-a4d257deb18c" />
+
 
 Modern Linux Distributions and sudo
 One of the recurrent problems for regular users is how to perform certain tasks that require superuser privileges. These tasks include installing and updating software, editing system configuration files, and accessing devices. In the Windows world, this is often done by giving users administrative privileges. This allows users to perform these tasks. However, it also enables programs executed by the user to have the same abilities. This is desirable in most cases, but it also permits malware (malicious software) such as viruses to have free rein of the computer.
@@ -913,16 +915,61 @@ chown can change the file owner and/or the file group owner depending on the fir
 Let's say we have two users; janet, who has access to superuser privileges and tony, who does not. User janet wants to copy a file from her home directory to the home directory of user tony. Since user janet wants tony to be able to edit the file, janet changes the ownership of the copied file from janet to tony.
 <img width="502" height="471" alt="image" src="https://github.com/user-attachments/assets/e15f3ead-b9f0-4ea8-84e8-4f2fcdcbfaef" />
 
+Notice that after the first use of sudo, janet was not prompted for her password. This is because sudo, in most configurations, “trusts” us for several minutes until its timer
 
+chgrp – Change Group Ownership
+In older versions of Unix, the chown command only changed file ownership, not group ownership. For that purpose, a separate command, chgrp was used. It works much the same way as chown, except for being more limited.
 
+Exercising Our Privileges
+We are going to demonstrate the solution to a common problem — setting up a shared directory. revisit our friends janet and tony. They both have music collections and want to set up a shared directory, where they will each store their music files as Ogg Vorbis or MP3. As before, user janet has access to superuser privileges via sudo.
+A group needs to be created that will have both janet and tony as members. This is done in two steps. First, using the groupadd command, we create the group followed with the usermod command to add users to the group.
+The options used with the usermod command are short for --append and --group and they add the specified user to the corresponding group in the /etc/group file.
+Next, janet creates the directory for the music files.
+Since janet is manipulating files outside of her home directory, superuser privileges are required. After the directory is created, it has the following ownerships and permissions
+As we can see, the directory is owned by root and has permission mode 755. To make this directory shareable, janet needs to change the group ownership and the group permissions to allow writing.
+Using the chown command, janet sets the group owner of the directory to music then uses chmod to set the directory permissions to 2755. This sets the setguid to cause all files in the directory to inherit the same group ownership as the directory. We did this by executing chmod 2755 but we could have done thing by using the symbolic method with chmod g+s.
+What does this all mean? It means that we now have a directory, /usr/local/share/Music that is owned by root and allows read and write access to group music. Group music has members janet and tony; thus, janet and tony can create files in directory /usr/local/share/Music. Other users can list the contents of the directory but cannot create files there.
+But we still have a problem. The default umask on this system is 0022, which prevents group members from writing files belonging to other members of the group. This would not be a problem if the shared directory contained only files, but since this directory will store music, and music is usually organized in a hierarchy of artists and albums, members of the group will need the ability to create files and directories inside directories created by other members. We need to change the umask used by janet and tony to 0002 instead.
+janet sets her umask to 0002, and creates a new test file and directory
+Both files and directories are now created with the correct permissions to allow all members of the group music to create files and directories inside the Music directory.
+The one remaining issue is umask. The necessary setting only lasts until the end of session and must be reset.
+<img width="273" height="119" alt="image" src="https://github.com/user-attachments/assets/7f7e6129-205f-43c9-91c4-f9240c5eecd4" />
+<img width="409" height="514" alt="image" src="https://github.com/user-attachments/assets/9b8b13f9-cbc0-41e1-b160-3437ef102826" />
+<img width="513" height="514" alt="image" src="https://github.com/user-attachments/assets/2f850616-8ad5-49fa-8876-e4fe35c72bfa" />
+<img width="472" height="299" alt="image" src="https://github.com/user-attachments/assets/be8dcd7c-1120-4ac4-996d-fe050b332c50" />
 
+Changing Your Password
+setting passwords for ourselves (and for other users if we have access to superuser privileges). To set or change a password, the passwd command is used. The command syntax looks like this:
+passwd [user]
+<img width="328" height="167" alt="image" src="https://github.com/user-attachments/assets/720d465a-ea4c-40a0-8373-554159562b19" />
+The passwd command will try to enforce use of “strong” passwords.
+If we have superuser privileges, you can specify a username as an argument to the passwd command to set the password for another user. Other options are available to the superuser to allow account locking, password expiration, and so on. See the passwd man page for details
 
+The passwd, addgroup, and usermod commands are part of a suite of commands in the shadow-utils package
+<img width="878" height="427" alt="image" src="https://github.com/user-attachments/assets/8d454135-cc47-4ffa-9e4d-e2347ece5115" />
 
+10 – Processes
+Modern operating systems are usually multitasking, meaning they create the illusion of doing more than one thing at once by rapidly switching from one executing program to another. The Linux kernel manages this through the use of processes. Processes are how Linux organizes the different programs waiting for their turn at the CPU
+In this chapter, we will look at some of the tools available at the command line that let us examine what programs are doing and how to terminate processes that are misbehaving.
+  ●  ps – Report a snapshot of current processes
+  ●  top – Display tasks
+  ●  jobs – List active jobs
+  ●  bg – Place a job in the background
+  ●  fg – Place a job in the foreground
+  ●  kill – Send a signal to a process
+  ●  killall – Kill processes by name
+  ●  nice - Run a program with modified scheduling priority
+  ●  renice - Alter priority of running processes
+  ●  nohup - Run a command immune to hangups
+  ●  halt/poweroff/reboot - Halt, power-off, or reboot the system
+  ●  shutdown – Shutdown or reboot the system
 
-
-
-
-
-
-
+How a Process Works
+When a system starts up, the kernel initiates a few of its own activities as processes and launches a program called init. init, in turn, starts systemd which starts all the system services. In older Linux distributions init runs a series of shell scripts (located in /etc) called init scripts to perform a similar function. Many system services are implemented as daemon programs, programs that just sit in the background and do their thing without having any user interface. So, even if we are not logged in, the system is at least a little busy performing routine stuff
+The fact that a program can launch other programs is expressed in the process scheme as a parent process producing a child process.
+The kernel maintains information about each process to help keep things organized. For example, each process is assigned a number called a process ID (PID). PIDs are assigned in ascending order, with init always getting PID 1. The kernel also keeps track of the memory assigned to each process, as well as the processes' readiness to resume execution. Like files, processes also have owners and user IDs, effective user IDs, etc.
+Viewing Processes
+The most commonly used tool to view processes (there are several) is the ps command. The ps program has a lot of options
+<img width="259" height="97" alt="image" src="https://github.com/user-attachments/assets/25520815-ae36-4a8b-8a56-3a2f2413b2f5" />
+The result in this example lists two processes, process 5198 and process 10129, which are bash and ps respectively. As we can see, by default, ps doesn't show us very much, just the processes associated with the current terminal session.
 
