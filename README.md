@@ -4,80 +4,6 @@ My notes for learning linux
 
 
  
-3 – Exploring the System
-  ●  ls – List directory contents
-  ●  file – Determine file type
-  ●  less – View file contents
-
-<img width="548" height="282" alt="image" src="https://github.com/user-attachments/assets/0479226c-2595-43e7-934b-2819019b341d" />
-
-We can even specify multiple directories. In the following example, we list both the user's home directory (symbolized by the “~” character) and the /usr directory.
-
-We can also change the format of the output to reveal more detail.
-
-<img width="420" height="183" alt="image" src="https://github.com/user-attachments/assets/f109b542-99e9-449a-ae65-252adcc6a024" />
-
-Commands are often followed by one or more options that modify their behavior, and further, by one or more arguments, the items upon which the command acts. So most commands look kind of like this: 
-command -options arguments
-<img width="426" height="180" alt="image" src="https://github.com/user-attachments/assets/63afd3cd-4bb2-41fc-8bf9-b7cec2ef1762" />
-
-Note that command options, like filenames in Linux, are case-sensitive.
-
-<img width="663" height="629" alt="image" src="https://github.com/user-attachments/assets/fa060e47-b4db-4413-ad54-9f5ae491a9cb" />
-
-<img width="833" height="568" alt="image" src="https://github.com/user-attachments/assets/43414849-9fa6-46ec-b29f-fd260ec1cf01" />
-
-As we explore the system it will be useful to know what kind of data files contain. To do this we will use the file command to determine a file's type
-
-[me@linuxbox ~]$ file picture.jpg
-picture.jpg: JPEG image data, JFIF standard 1.01
-
-The less command is a program to view text files. Throughout our Linux system, there are many files that contain human-readable text. The less program provides a convenient way to examine them
-
-There are many ways to represent information on a computer. All methods involve defining a relationship between the information and some numbers that will be used to represent it. Computers, after all, only understand numbers and all data is converted to numeric representation.
-
-Some of these representation systems are very complex (such as compressed video files), while others are rather simple. One of the earliest and simplest is called ASCII text. ASCII (pronounced "As-Key") is short for American Standard Code for Information Interchange. This is a simple encoding scheme that was first used on Teletype machines to map keyboard characters to numbers.
-Text is a simple one-to-one mapping of characters to numbers. It is very compact. Fifty characters of text translates to fifty bytes of data. It is important to understand that text only contains a simple mapping of characters to numbers. It is not the same as a word processor document such as one created by Microsoft Word or LibreOffice Writer. Those files, in contrast to simple ASCII text, contain many non-text elements that are used to describe its structure and formatting. Plain ASCII text files contain only the characters themselves and a few rudimentary control codes such as tabs, carriage returns and line feeds.
-Throughout a Linux system, many files are stored in text format and there are many Linux tools that work with text files. Even Windows recognizes the importance of this format. The well-known NOTEPAD.EXE program is an editor for plain ASCII text files.
-
-Why would we want to examine text files? Because many of the files that contain system settings (called configuration files) are stored in this format, and being able to read them gives us insight about how the system works.
-
-some of the actual programs that the system uses (called scripts) are stored in this format.
-
-<img width="833" height="485" alt="image" src="https://github.com/user-attachments/assets/209cbd92-3f75-4264-b7f5-73a9a99768a8" />
-
-Less Is More
-The less program was designed as an improved replacement of an earlier Unix program called more. The name “less” is a play on the phrase “less is more” — a motto of modernist architects and designers.
-less falls into the class of programs called “pagers,” programs that allow the easy viewing of long text documents in a page by page manner. Whereas the more program could only page forward, the less program allows paging both forward and backward and has many other features as well.
-
-1.cd into a given directory
-2.List the directory contents with ls -l
-3.If you see an interesting file, determine its contents with file
-4.If it looks like it might be text, try viewing it with less
-5.If we accidentally attempt to view a non-text file and it scrambles the terminal window, we can recover by entering the reset command.
-
-Remember the copy and paste trick! If you are using a mouse, you can double click on a filename to copy it and middle click to paste it into commands.
-
-<img width="672" height="198" alt="image" src="https://github.com/user-attachments/assets/e3c763c8-8fdb-429b-82c1-c0abf390a176" />
-
-<img width="444" height="592" alt="image" src="https://github.com/user-attachments/assets/48df7c82-09ff-4f1f-aadb-02c1f36a11ce" />
-
-<img width="442" height="574" alt="image" src="https://github.com/user-attachments/assets/aa230340-00d6-427d-ad91-db25db053ef0" />
-
-<img width="441" height="562" alt="image" src="https://github.com/user-attachments/assets/87be6681-c8f4-4f8c-baee-561e561a8126" />
-
-<img width="445" height="75" alt="image" src="https://github.com/user-attachments/assets/09b44823-c535-4835-bda6-d50ef610042b" />
-
-Symbolic Links
-  lrwxrwxrwx 1 root root 11 2007-08-11 07:34 libc.so.6 -> libc-2.6.so
-
-Notice how the first letter of the listing is “l” and the entry seems to have two filenames? This is a special kind of a file called a symbolic link (also known as a soft link or symlink). In most Unix-like systems it is possible to have a file referenced by multiple names. While the value of this might not be obvious, it is really a useful feature.
-Picture this scenario: A program requires the use of a shared resource of some kind contained in a file named “foo,” but “foo” has frequent version changes. It would be good to include the version number in the filename so the administrator or other interested party could see what version of “foo” is installed. This presents a problem. If we change the name of the shared resource, we have to track down every program that might use it and change it to look for a new resource name every time a new version of the resource is installed. That doesn't sound like fun at all.
-
-Here is where symbolic links save the day. Suppose we install version 2.6 of “foo,” which has the filename “foo-2.6” and then create a symbolic link simply called “foo” that points to “foo-2.6.” This means that when a program opens the file “foo”, it is actually opening the file “foo-2.6”. Now everybody is happy. The programs that rely on “foo” can find it and we can still see what actual version is installed. When it is time to upgrade to “foo-2.7,” we just add the file to our system, delete the symbolic link “foo” and create a new one that points to the new version. Not only does this solve the problem of the version upgrade, but it also allows us to keep both versions on our machine. Imagine that “foo-2.7” has a bug (damn those developers!) and we need to revert to the old version. Again, we just delete the symbolic link pointing to the new version and create a new symbolic link pointing to the old version.
-
-Hard Links
-While we are on the subject of links, we need to mention that there is a second type of link called a hard link. Hard links also allow files to have multiple names, but they do it in a different way.
 
 4 – Manipulating Files and Directories
 
@@ -828,18 +754,18 @@ Years ago, most Linux distributions relied on su for this purpose. su didn't req
 When Ubuntu was introduced, its creators took a different tack. By default, Ubuntu disables logins to the root account (by failing to set a password for the account) and instead uses sudo to grant superuser privileges. The initial user account is granted full access to superuser privileges via sudo and may grant similar powers to subsequent user accounts. This method of granting privileges is now the accepted standard is most modern distributions.
 
 chown – Change File Owner and Group
-The chown command is used to change the owner and group owner of a file or directory. Superuser privileges are required to use this command.
+The chown command is used to change the owner and group owner of a file or directory. Superuser privileges are required to use this command. <br>
 
 chown [owner][:[group]] file...
 
-chown can change the file owner and/or the file group owner depending on the first argument of the command.
-<img width="998" height="430" alt="image" src="https://github.com/user-attachments/assets/3e990c1f-c97c-41f7-a746-b516a90d0389" />
-Let's say we have two users; janet, who has access to superuser privileges and tony, who does not. User janet wants to copy a file from her home directory to the home directory of user tony. Since user janet wants tony to be able to edit the file, janet changes the ownership of the copied file from janet to tony.
-<img width="502" height="471" alt="image" src="https://github.com/user-attachments/assets/e15f3ead-b9f0-4ea8-84e8-4f2fcdcbfaef" />
+<br> chown can change the file owner and/or the file group owner depending on the first argument of the command. <br>
+<img width="998" height="430" alt="image" src="https://github.com/user-attachments/assets/3e990c1f-c97c-41f7-a746-b516a90d0389" /> <br>
+Let's say we have two users; janet, who has access to superuser privileges and tony, who does not. User janet wants to copy a file from her home directory to the home directory of user tony. Since user janet wants tony to be able to edit the file, janet changes the ownership of the copied file from janet to tony. <br>
+<img width="502" height="471" alt="image" src="https://github.com/user-attachments/assets/e15f3ead-b9f0-4ea8-84e8-4f2fcdcbfaef" /> <br>
 
 Notice that after the first use of sudo, janet was not prompted for her password. This is because sudo, in most configurations, “trusts” us for several minutes until its timer
 
-chgrp – Change Group Ownership
+<h6>chgrp – Change Group Ownership </h6>
 In older versions of Unix, the chown command only changed file ownership, not group ownership. For that purpose, a separate command, chgrp was used. It works much the same way as chown, except for being more limited.
 
 Exercising Our Privileges
@@ -854,44 +780,49 @@ What does this all mean? It means that we now have a directory, /usr/local/share
 But we still have a problem. The default umask on this system is 0022, which prevents group members from writing files belonging to other members of the group. This would not be a problem if the shared directory contained only files, but since this directory will store music, and music is usually organized in a hierarchy of artists and albums, members of the group will need the ability to create files and directories inside directories created by other members. We need to change the umask used by janet and tony to 0002 instead.
 janet sets her umask to 0002, and creates a new test file and directory
 Both files and directories are now created with the correct permissions to allow all members of the group music to create files and directories inside the Music directory.
-The one remaining issue is umask. The necessary setting only lasts until the end of session and must be reset.
-<img width="273" height="119" alt="image" src="https://github.com/user-attachments/assets/7f7e6129-205f-43c9-91c4-f9240c5eecd4" />
-<img width="409" height="514" alt="image" src="https://github.com/user-attachments/assets/9b8b13f9-cbc0-41e1-b160-3437ef102826" />
-<img width="513" height="514" alt="image" src="https://github.com/user-attachments/assets/2f850616-8ad5-49fa-8876-e4fe35c72bfa" />
-<img width="472" height="299" alt="image" src="https://github.com/user-attachments/assets/be8dcd7c-1120-4ac4-996d-fe050b332c50" />
+The one remaining issue is umask. The necessary setting only lasts until the end of session and must be reset.<br><br>
+<img width="273" height="119" alt="image" src="https://github.com/user-attachments/assets/7f7e6129-205f-43c9-91c4-f9240c5eecd4" /><br><br>
+<img width="409" height="514" alt="image" src="https://github.com/user-attachments/assets/9b8b13f9-cbc0-41e1-b160-3437ef102826" /><br><br>
+<img width="513" height="514" alt="image" src="https://github.com/user-attachments/assets/2f850616-8ad5-49fa-8876-e4fe35c72bfa" /><br><br>
+<img width="472" height="299" alt="image" src="https://github.com/user-attachments/assets/be8dcd7c-1120-4ac4-996d-fe050b332c50" /> <br><br>
 
 Changing Your Password
 setting passwords for ourselves (and for other users if we have access to superuser privileges). To set or change a password, the passwd command is used. The command syntax looks like this:
-passwd [user]
-<img width="328" height="167" alt="image" src="https://github.com/user-attachments/assets/720d465a-ea4c-40a0-8373-554159562b19" />
+passwd [user] <br><br>
+<img width="328" height="167" alt="image" src="https://github.com/user-attachments/assets/720d465a-ea4c-40a0-8373-554159562b19" /> <br><br>
 The passwd command will try to enforce use of “strong” passwords.
 If we have superuser privileges, you can specify a username as an argument to the passwd command to set the password for another user. Other options are available to the superuser to allow account locking, password expiration, and so on. See the passwd man page for details
 
-The passwd, addgroup, and usermod commands are part of a suite of commands in the shadow-utils package
-<img width="878" height="427" alt="image" src="https://github.com/user-attachments/assets/8d454135-cc47-4ffa-9e4d-e2347ece5115" />
+The passwd, addgroup, and usermod commands are part of a suite of commands in the shadow-utils package <br><br>
+<img width="878" height="427" alt="image" src="https://github.com/user-attachments/assets/8d454135-cc47-4ffa-9e4d-e2347ece5115" /> <br><br>
 
 10 – Processes
 Modern operating systems are usually multitasking, meaning they create the illusion of doing more than one thing at once by rapidly switching from one executing program to another. The Linux kernel manages this through the use of processes. Processes are how Linux organizes the different programs waiting for their turn at the CPU
 In this chapter, we will look at some of the tools available at the command line that let us examine what programs are doing and how to terminate processes that are misbehaving.
-  ●  ps – Report a snapshot of current processes
-  ●  top – Display tasks
-  ●  jobs – List active jobs
-  ●  bg – Place a job in the background
-  ●  fg – Place a job in the foreground
-  ●  kill – Send a signal to a process
-  ●  killall – Kill processes by name
-  ●  nice - Run a program with modified scheduling priority
-  ●  renice - Alter priority of running processes
-  ●  nohup - Run a command immune to hangups
-  ●  halt/poweroff/reboot - Halt, power-off, or reboot the system
-  ●  shutdown – Shutdown or reboot the system
+<div>
+ <ul type=bullet>
+  <li/>  ps – Report a snapshot of current processes 
+  <li/>  top – Display tasks
+  <li/>  jobs – List active jobs
+  <li/>  bg – Place a job in the background
+  <li/>  fg – Place a job in the foreground
+  <li/>  kill – Send a signal to a process
+  <li/>  killall – Kill processes by name
+  <li/>  nice - Run a program with modified scheduling priority
+  <li/>  renice - Alter priority of running processes
+  <li/>  nohup - Run a command immune to hangups
+  <li/>  halt/poweroff/reboot - Halt, power-off, or reboot the system
+  <li/>  shutdown – Shutdown or reboot the system
+ </ul>
+</div>
+
 
 How a Process Works
 When a system starts up, the kernel initiates a few of its own activities as processes and launches a program called init. init, in turn, starts systemd which starts all the system services. In older Linux distributions init runs a series of shell scripts (located in /etc) called init scripts to perform a similar function. Many system services are implemented as daemon programs, programs that just sit in the background and do their thing without having any user interface. So, even if we are not logged in, the system is at least a little busy performing routine stuff
 The fact that a program can launch other programs is expressed in the process scheme as a parent process producing a child process.
 The kernel maintains information about each process to help keep things organized. For example, each process is assigned a number called a process ID (PID). PIDs are assigned in ascending order, with init always getting PID 1. The kernel also keeps track of the memory assigned to each process, as well as the processes' readiness to resume execution. Like files, processes also have owners and user IDs, effective user IDs, etc.
 Viewing Processes
-The most commonly used tool to view processes (there are several) is the ps command. The ps program has a lot of options
-<img width="259" height="97" alt="image" src="https://github.com/user-attachments/assets/25520815-ae36-4a8b-8a56-3a2f2413b2f5" />
+The most commonly used tool to view processes (there are several) is the ps command. The ps program has a lot of options <br><br>
+<img width="259" height="97" alt="image" src="https://github.com/user-attachments/assets/25520815-ae36-4a8b-8a56-3a2f2413b2f5" /> <br><br>
 The result in this example lists two processes, process 5198 and process 10129, which are bash and ps respectively. As we can see, by default, ps doesn't show us very much, just the processes associated with the current terminal session.
 
