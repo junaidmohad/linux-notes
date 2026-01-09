@@ -124,7 +124,7 @@ The uniq command is often used in conjunction with sort. uniq accepts a sorted l
 <img width="342" height="46" alt="image" src="https://github.com/user-attachments/assets/a092a52c-d881-4cc5-87fb-70874d9fb0a4" /> <br>
 
 we use uniq to remove any duplicates from the output of the sort command. If we want to see the list of duplicates instead, we add the “-d” option to uniq like so <br>
-<img width="375" height="42" alt="image" src="https://github.com/user-attachments/assets/25f6170a-4d7f-4956-bd59-29e4a03ef918" />
+<img width="375" height="42" alt="image" src="https://github.com/user-attachments/assets/25f6170a-4d7f-4956-bd59-29e4a03ef918" /> <br>
 <img width="275" height="563" alt="image" src="https://github.com/user-attachments/assets/672d07a3-67a1-405e-ab78-2b90dc76f6ed" />
 <img width="252" height="561" alt="image" src="https://github.com/user-attachments/assets/748afa71-b0d7-40ca-827e-f94331bece96" />
 
