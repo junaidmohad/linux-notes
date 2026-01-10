@@ -57,7 +57,7 @@ top program displays a continuously updating (by default, every three seconds) d
 <img width="834" height="428" alt="image" src="https://github.com/user-attachments/assets/5142cdef-ed13-4782-a800-b3988319e883" />
 <img width="668" height="550" alt="image" src="https://github.com/user-attachments/assets/f63ecf19-a3e1-49b3-b79b-18cd40ceda4b" /> <br>
 
-The top program accepts a number of keyboard commands. The two most interesting are h, which displays the program's help screen, and q, which quits top.
+The top program accepts a number of keyboard commands. The two most interesting are h, which displays the program's help screen, and q, which quits top. <br>
 <img width="646" height="388" alt="image" src="https://github.com/user-attachments/assets/dd67a7d4-febd-4fa6-ac0d-9aa1261845ea" />
 
 <h6>Controlling Processes </h6>
@@ -88,7 +88,7 @@ Note that we can put multiple commands in the background by using this shortcut 
 <h6>Returning a Process to the Foreground</h6>
 A process in the background is immune from terminal keyboard input, including any attempt to interrupt it with Ctrl-c. To return a process to the foreground, use the fg command <br>
 <img width="301" height="139" alt="image" src="https://github.com/user-attachments/assets/900db444-f4c2-4a35-a150-db777939be28" /> <br>
-fg command followed by a percent sign and the job number (called a jobspec) does the trick. If we only have one background job, the jobspec is optional. To terminate xlogo, press Ctrl-c
+fg command followed by a percent sign and the job number (called a jobspec) does the trick. If we only have one background job, the jobspec is optional. To terminate xlogo, press Ctrl-c <br>
 <img width="225" height="173" alt="image" src="https://github.com/user-attachments/assets/b7801e02-c104-4abd-86ff-64aa64065376" />
 
 <h6>Stopping (Pausing) a Process</h6>
@@ -104,6 +104,90 @@ Why would we want to launch a graphical program from the command line? There are
 <li/> The program we want to run might not be listed on the window manager's menus (such as xlogo).
 <li/> By launching a program from the command line, we might be able to see error messages that would otherwise be invisible if the program were launched graphically. Sometimes, a program will fail to start up when launched from the graphical menu. By launching it from the command line instead, we may see an error message that will reveal the problem. Also, some graphical programs have interesting and useful command line options
 
+<h6>Changing Process Priority</h6>
+we saw in the output of the ps command (as well as top) there is a process attribute called “niceness” which refers to the scheduling priority given to a process. In certain circumstances such as when video transcoding or performing CPU-based ray tracing for example, we may want to give a process more priority (less niceness) or alternately if we want a process to use less CPU time we could give it more niceness. Niceness can be adjusted with the nice and renice commands. It is important to remember that only the superuser may increase the priority of a process and that regular users may only decrease the priority of processes that they own <br>
+nice command launches a process with a specified niceness. Niceness adjustments are expressed from -20 (the most favorable) to 19 (the least favorable) with a default of value of zero (no adjustment).<br>
+
+Imagine we have a program called cpu-hog that we want to run at a lower priority than it’s normal 20. We can launch the program with nice <br>
+[me@linuxbox ~]$ nice -n 10 cpu-hog <br>
+<img width="472" height="375" alt="image" src="https://github.com/user-attachments/assets/09d1a661-876d-4820-8d3c-7fb6f6888097" /> <br>
+
+if we have a program called must-run-fast that needs to be given more CPU priority, we (as the superuser) could do this <br>
+[me@linuxbox ~]$ sudo nice -n -10 must-run-fast <br>
+
+rarely necessary to run a command with increased priority and doing so runs the risk of starving essential system processes of needed CPU time, so be careful <br>
+
+renice command adjusts the priority of a running process. For example, if we had launched the cpu-hog program and wanted to increase its niceness after the fact <br>
+<img width="426" height="331" alt="image" src="https://github.com/user-attachments/assets/d8c8218e-ab6d-41c8-9cbd-d45707afc02e" /> <br>
+First, we run ps to determine the process id of the running cpu-hog program followed by the renice command with the desired niceness level and the process id. The niceness level of 19 (the maximum value) is useful as it makes the process only use CPU cycles when nothing else is waiting
+
+<h5>Signals</h5>
+kill command is used to “kill” processes. This allows us to terminate programs that need killing (that is, some kind of pausing or termination).
+<img width="268" height="288" alt="image" src="https://github.com/user-attachments/assets/cdb5c19c-b1db-433e-b87b-e76409a71e3d" /> <br>
+
+first launch xlogo in the background. The shell prints the jobspec and the PID of the background process. Next, we use the kill command and specify the PID of the process we want to terminate. We could have also specified the process using a jobspec (for example, %1) instead of a PID <br>
+
+this is all very straightforward, there is more to it than that. The kill command doesn't exactly “kill” processes: rather it sends them signals. Signals are one of several <br>
+ways that the operating system communicates with programs. We have already seen signals in action with the use of Ctrl-c and Ctrl-z. When the terminal receives one of these keystrokes, it sends a signal to the program in the foreground. In the case of Ctrl-c, a signal called INT (interrupt) is sent; with Ctrl-z, a signal called TSTP (terminal stop) is sent <br>
+The fact that a program can listen and act upon signals allows a program to do things such as save work in progress when it is sent a termination signal.
+
+<h6>Sending Signals to Processes with kill</h6>
+The kill command is used to send signals to programs. Its most common syntax looks like this: <br>
+kill [-signal] PID... <br>
+
+If no signal is specified on the command line, then the TERM (terminate) signal is sent by default. The kill command is most often used to send the following signals <br>
+<img width="822" height="600" alt="image" src="https://github.com/user-attachments/assets/02c74398-e7f5-4ace-8693-9dd32c6c7c10" />
+<img width="505" height="534" alt="image" src="https://github.com/user-attachments/assets/2b3d866c-1765-4237-9e9d-06fca762ac62" />
+
+trying the kill command: <br>
+<img width="262" height="274" alt="image" src="https://github.com/user-attachments/assets/02ddca07-b1c7-4f1b-adaa-d1b978d270bf" /> <br>
+
+we start the xlogo program in the background and then send it a HUP signal with kill. The xlogo program terminates, and the shell indicates that the background process has received a hangup signal. We may need to press the Enter key a couple of times before the message appears. Note that signals may be specified either by number or by name, including the name prefixed with the letters SIG <br>
+<img width="223" height="304" alt="image" src="https://github.com/user-attachments/assets/7efad8a7-f4af-43e9-9b9a-f4ae47502339" /> <br>
+we can also use jobspecs in place of PIDs.
+Processes, like files, have owners, and you must be the owner of a process (or the superuser) to send it signals with kill.
+In addition to the list of signals above, which are most often used with kill, there are other signals frequently used by the system as listed
+
+<img width="815" height="383" alt="image" src="https://github.com/user-attachments/assets/c0444b24-47a8-4c8b-b716-46fd9dc574d6" /> <br>
+
+a complete list of signals can be displayed with the following command <br>
+
+<img width="512" height="77" alt="image" src="https://github.com/user-attachments/assets/2bee80fb-1c5d-4549-bc1b-1df89b907c94" /> <br>
+
+<h6>Making a Process Hangup Proof</h6>
+As we discussed, above many command line programs will respond to the HUP signal by terminating when its controlling terminal “hangs up” (i.e. closes or disconnects). To prevent this behavior, we can launch the program with the nohup command.
+If we launch the xlogo program again then close our terminal window, the xlogo program will terminate because it is sent a HUP signal when its controlling terminal is closed. To prevent this we can launch xlogo with the nohup command
+<br>
+<img width="463" height="200" alt="image" src="https://github.com/user-attachments/assets/556efec0-eeed-49d1-ae45-5910904f1063" /> <br>
+when we close the terminal window, xlogo will continue running.
+
+<h6>Sending Signals to Multiple Processes with killall</h6>
+It's also possible to send signals to multiple processes matching a specified program or username by using the killall command.<br>
+killall [-u user] [-signal] name... <br>
+<img width="300" height="526" alt="image" src="https://github.com/user-attachments/assets/1739c8c9-9d20-4d68-8540-fbd82d012a29" />
+<br>
+Remember, as with kill, we must have superuser privileges to send signals to processes that do not belong to us
+
+<h6>Shutting Down the System</h6>
+The process of shutting down the system involves the orderly termination of all the processes on the system, as well as performing some vital housekeeping chores (such as syncing all of the mounted file systems) before the system powers off. There are four commands that can perform this function. They are halt, poweroff, reboot, and shutdown. The first three are pretty self-explanatory and are generally used without any command line options <br>
+[me@linuxbox ~]$ sudo reboot <br>
+
+The shutdown command is a bit more interesting. With it, we can specify which of the actions to perform (halt, power down, or reboot) and provide a time delay to the shutdown event. Most often it is used like this to halt the system <br>
+[me@linuxbox ~]$ sudo shutdown -h now <br>
+or like this to reboot the system: <br>
+[me@linuxbox ~]$ sudo shutdown -r now <br>
+
+The delay can be specified in a variety of ways. See the shutdown man page for details. Once the shutdown command is executed, a message is “broadcast” to all logged-in users warning them of the impending event
+
+
+<h6>More Process-Related Commands</h6>
+Since monitoring processes is an important system administration task, there are a lot of commands for it.
+<img width="816" height="395" alt="image" src="https://github.com/user-attachments/assets/c71b810e-fe85-4e95-afab-e287ae361f49" /> <br>
+<img width="786" height="397" alt="image" src="https://github.com/user-attachments/assets/02767ea4-1e0b-475a-bcc0-3f2b77974413" />
+<img width="680" height="92" alt="image" src="https://github.com/user-attachments/assets/a8b9d3d7-a1fb-4a4a-8e8a-25686293186b" />
+<img width="360" height="255" alt="image" src="https://github.com/user-attachments/assets/aeddbd20-5e49-4225-939a-8c514cd64501" />
+<img width="236" height="554" alt="image" src="https://github.com/user-attachments/assets/ca7a390c-f44a-430e-88fc-18b7cbbd8303" />
 
 
 
+Most modern systems feature a mechanism for managing multiple processes. Linux provides a rich set of tools for this purpose. Given that Linux is the world's most deployed server operating system, this makes a lot of sense. However, unlike some other systems, Linux relies primarily on command line tools for process management. Though there are graphical process tools for Linux, the command line tools are greatly preferred because of their speed and light footprint. While the GUI tools may look pretty, they often create a lot of system load themselves, which somewhat defeats the purpose
