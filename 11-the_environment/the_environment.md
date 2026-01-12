@@ -14,27 +14,25 @@ The shell stores two basic types of data in the environment; though, with bash, 
 
 <h6>Examining The Environment</h6>
 To see what is stored in the environment, we can use either the set builtin in bash or the printenv program. The set command will show both the shell and environment variables, while printenv will only display the latter. Since the list of environment contents will be fairly long, it is best to pipe the output of either command into less <br>
-<img width="185" height="39" alt="image" src="https://github.com/user-attachments/assets/befa3b22-a91b-40f6-9baa-afdace81414d" />
+<img width="185" height="39" alt="image" src="https://github.com/user-attachments/assets/befa3b22-a91b-40f6-9baa-afdace81414d" /> <br>
 <img width="546" height="475" alt="image" src="https://github.com/user-attachments/assets/63301a49-a1bc-478e-afbb-ea1ba616e7c5" /> <br>
 
 What we see is a list of environment variables and their values. For example, we see a variable called USER, which contains the value me. The printenv command can also list the value of a specific variable <br>
 <img width="182" height="73" alt="image" src="https://github.com/user-attachments/assets/28936398-b218-4a52-8e82-481ea1212e31" /> <br>
 
 set command, when used without options or arguments, will display both the shell and environment variables, as well as any defined shell functions. Unlike printenv, its output is courteously sorted in alphabetical order <br>
-<img width="183" height="47" alt="image" src="https://github.com/user-attachments/assets/817acd85-c5c9-4bfd-843f-efc2ea5e6c31" />
-<img width="486" height="485" alt="image" src="https://github.com/user-attachments/assets/1af2f858-180d-4bb2-be7b-f6452cf36e44" />
-<br>
+<img width="183" height="47" alt="image" src="https://github.com/user-attachments/assets/817acd85-c5c9-4bfd-843f-efc2ea5e6c31" /> <br>
+<img width="486" height="485" alt="image" src="https://github.com/user-attachments/assets/1af2f858-180d-4bb2-be7b-f6452cf36e44" /> <br>
 It is also possible to view the contents of a variable using the echo command <br>
-<img width="239" height="60" alt="image" src="https://github.com/user-attachments/assets/1dafb25b-d149-44e4-b0c7-bc16daec8cdf" />
-<br>
+<img width="239" height="60" alt="image" src="https://github.com/user-attachments/assets/1dafb25b-d149-44e4-b0c7-bc16daec8cdf" /> <br>
 
 One element of the environment that neither set nor printenv displays is aliases. To see them, enter the alias command without arguments <br>
 <img width="238" height="231" alt="image" src="https://github.com/user-attachments/assets/540046b7-102c-44fb-9275-0d9b3fe5f6da" /> <br>
 
 <h6>Some Interesting Variables</h6>
 The environment contains quite a few variables, and though the environment will differ from the one presented here, we will likely see the variables listed <br>
-<img width="808" height="173" alt="image" src="https://github.com/user-attachments/assets/e1274f8b-405b-4cf0-aa08-3983a6de1d34" />
-<img width="657" height="591" alt="image" src="https://github.com/user-attachments/assets/892d8758-8775-46e0-9ac1-ba14b72112fe" />
+<img width="808" height="173" alt="image" src="https://github.com/user-attachments/assets/e1274f8b-405b-4cf0-aa08-3983a6de1d34" /> <br>
+<img width="657" height="591" alt="image" src="https://github.com/user-attachments/assets/892d8758-8775-46e0-9ac1-ba14b72112fe" /> <br>
 
 <h6>How Is The Environment Established?</h6>
 When we log on to the system, the bash program starts, and reads a series of configuration scripts called startup files, which define the default environment shared by all users. This is followed by more startup files in our home directory that define our personal environment. The exact sequence depends on the type of shell session being started. There are two kinds.
@@ -43,7 +41,7 @@ When we log on to the system, the bash program starts, and reads a series of con
   <li/> A non-login shell session: A non-login shell session typically occurs when we launch a terminal session in the GUI with our terminal emulator
 </ul>
 
-<img width="904" height="444" alt="image" src="https://github.com/user-attachments/assets/4e34c193-32d9-4d5d-afc3-8b6f420a55ae" />
+<img width="904" height="444" alt="image" src="https://github.com/user-attachments/assets/4e34c193-32d9-4d5d-afc3-8b6f420a55ae" /> <br>
 <img width="904" height="263" alt="image" src="https://github.com/user-attachments/assets/6ee71222-cc08-41e0-beb9-f6e537a7673f" /> <br>
 
 In addition to reading the startup files in Table 11-3, non-login shells inherit the environment variables from their parent process, usually a login shell <br>
@@ -52,11 +50,11 @@ The ~/.bashrc file is probably the most important startup file from the ordinary
 <h6>What's in a Startup File?</h6>
 If we take a look inside a typical .bash_profile (taken from a CentOS 6 system) <br>
 <img width="619" height="314" alt="image" src="https://github.com/user-attachments/assets/39ef9620-f7b9-40bf-ae13-bfcd08893a63" /> <br>
-<img width="580" height="459" alt="image" src="https://github.com/user-attachments/assets/806fb001-d3b6-4f65-880d-85556a2f8dd0" />
+<img width="580" height="459" alt="image" src="https://github.com/user-attachments/assets/806fb001-d3b6-4f65-880d-85556a2f8dd0" /> <br>
 (less ~/.profile) for kali
-Lines that begin with a “#” are comments and are not read by the shell. These are there for human readability. The first interesting thing occurs on the fourth line
+Lines that begin with a “#” are comments and are not read by the shell. These are there for human readability. The first interesting thing occurs on the fourth line <br>
 
-This is called an if compound command, here is a translation: 
+This is called an if compound command, here is a translation: <br>
 <img width="474" height="80" alt="image" src="https://github.com/user-attachments/assets/db87ff5c-37b7-4bb0-aabe-699c469e9427" /> <br>
 this bit of code is how a login shell gets the contents of .bashrc. The next thing in our startup file has to do with the PATH variable <br>
 
@@ -85,7 +83,7 @@ When a child process terminates, it takes its environment with it. This fact wil
 <img width="281" height="522" alt="image" src="https://github.com/user-attachments/assets/027342bc-cfb6-4577-b0a0-9c2355d551d3" />
 
 <h6>Launching a Program with a Temporary Environment</h6>
-Another handy trick the shell provides is the ability to execute a command and give it a temporary environment variable. Sometimes we want to run a program and give it a special environment value. A good example is the man command which looks for an environment variable named MANWIDTH that tells man how wide to format its output. For example, to have man format its output a maximum of 75 characters wide (a handy setting for easy reading)
+Another handy trick the shell provides is the ability to execute a command and give it a temporary environment variable. Sometimes we want to run a program and give it a special environment value. A good example is the man command which looks for an environment variable named MANWIDTH that tells man how wide to format its output. For example, to have man format its output a maximum of 75 characters wide (a handy setting for easy reading) <br>
 <img width="268" height="91" alt="image" src="https://github.com/user-attachments/assets/9bb56051-5262-457d-b090-4eb040dad2a1" /> <br>
 
 <h6>Which Files Should We Modify?</h6>
