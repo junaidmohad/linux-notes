@@ -1,5 +1,4 @@
 <h2>11 – The Environment</h2>
-
 the shell maintains a body of information during our shell session called the environment. Programs use data stored in the environment to determine facts about the system's configuration. While most programs use configuration files to store program settings, some programs also look for values stored in the environment to adjust their behavior
 <ul type=bullets>
   <li/>  printenv – Print part or all of the environment
@@ -89,6 +88,50 @@ Another handy trick the shell provides is the ability to execute a command and g
 <h6>Which Files Should We Modify?</h6>
 As a general rule, to add directories to your PATH or define additional environment variables, place those changes in .bash_profile (or the equivalent, according to your distribution; for example, Ubuntu uses .profile). For everything else, place the changes in .bashrc. <br>
 Note: Unless you are the system administrator and need to change the defaults for all users of the system, restrict your modifications to the files in your home directory. It is certainly possible to change the files in /etc such as profile, and in many cases it would be sensible to do so <br>
+
+<h6>Text Editors</h6>
+To edit (i.e., modify) the shell's startup files, as well as most of the other configuration files on the system, we use a program called a text editor. A text editor is a program that is, in some ways, like a word processor in that it allows us to edit the words on the screen with a moving cursor. It differs from a word processor by only supporting pure text and often contains features designed for writing programs. Text editors are the central tool used by software developers to write code and by system administrators to manage the configuration files that control the system. <br>
+A lot of different text editors are available for Linux; most systems have several installed <br>
+
+Text editors fall into two basic categories: graphical and text-based. GNOME and KDE both include some popular graphical editors. GNOME ships with an editor called gedit, which is usually called “Text Editor” in the GNOME menu. KDE usually ships with three, which are (in order of increasing complexity) kedit, kwrite, and kate. <br>
+There are many text-based editors. The popular ones we'll often encounter are nano, vi, and emacs. The nano editor is a simple, easy-to-use editor designed as a replacement for the pico editor supplied with the PINE email suite. The vi editor (which on most Linux systems is replaced by a program called vim, which is short for “vi improved”) is the traditional editor for Unix-like systems <br>
+emacs editor was originally written by Richard Stallman. It is a gigantic, all-purpose, does-everything programming environment. While readily available, it is seldom installed on most Linux systems by default.
+
+<h6>Using a Text Editor </h6>
+Text editors are invoked from the command line by typing the name of the editor followed by the name of the file we want to edit. If the file does not already exist, the editor will assume that we want to create a new file. <br>
+[me@linuxbox ~]$ gedit some_file <br>
+command will start the gedit text editor and load the file named “some_file”, if it exists. <br> <br>
+
+fire up nano and edit the .bashrc file. But before we do that, let's practice some “safe computing.” Whenever we edit an important configuration file, it is always a good idea to create a backup copy of the file first. This protects us in case we mess up the file while editing. To create a backup of the .bashrc file, do this <br>
+<img width="217" height="94" alt="image" src="https://github.com/user-attachments/assets/38a88adb-e7f2-435d-9bf2-0e50802220b9" /> <br>
+It doesn't matter what we call the backup file; just pick an understandable name. The extensions “.bak”, “.sav”, “.old”, and “.orig” are all popular ways of indicating a backup file. Oh, and remember that cp will overwrite existing files silently <br>
+The screen consists of a header at the top, the text of the file being edited in the middle, and a menu of commands at the bottom. Since nano was designed to replace the text editor supplied with an email client, it is rather short on editing features. <br>
+<img width="1000" height="541" alt="image" src="https://github.com/user-attachments/assets/1a1a4635-04f1-46b4-80c9-de5b134d247d" /><br>
+we press Ctrl-x to exit. <br>
+The notation ^X means Ctrl-x. This is a common notation for control characters used by many programs <br>
+to save our work. With nano it's Ctrl-o. <br>
+Using the down arrow key and/or the PageDown key, move the cursor to the end of the file <br>
+add the following lines to the .bashrc file <br>
+<img width="230" height="79" alt="image" src="https://github.com/user-attachments/assets/87b77d94-04c3-4bc1-b22b-c597c24d9361" /> <br>
+<img width="490" height="357" alt="image" src="https://github.com/user-attachments/assets/18eb2508-8bf0-4af4-aed7-987d99d51dd1" /> <br>
+many of our additions are not intuitively obvious, so it would be a good idea to add some comments to our .bashrc file to help explain things to the humans.<br>
+<img width="359" height="165" alt="image" src="https://github.com/user-attachments/assets/93f10e7f-8609-416e-83d8-b3bbd5aac704" /> <br>
+<img width="467" height="362" alt="image" src="https://github.com/user-attachments/assets/21fcedf3-68ea-4ffb-b02f-ad62ff5e398c" /> <br>
+<img width="462" height="36" alt="image" src="https://github.com/user-attachments/assets/0dc6d680-4371-4ac9-87eb-9c04ea8b686d" /> <br>
+
+<h6>Activating Our Changes</h6>
+The changes we have made to our .bashrc will not take effect until we close our terminal session and start a new one because the .bashrc file is only read at the beginning of a session. However, we can force bash to reread the modified .bashrc file <br>
+<img width="478" height="383" alt="image" src="https://github.com/user-attachments/assets/37227188-04d3-4f9c-a50e-ea612158db54" /> <br>
+<img width="223" height="352" alt="image" src="https://github.com/user-attachments/assets/9bd5ac66-2038-4a91-8494-9f4860c1393c" /> <br>
+<img width="198" height="110" alt="image" src="https://github.com/user-attachments/assets/7cc993ca-600a-4fcb-a677-c80703b36c4e" /> <br>
+<img width="478" height="383" alt="image" src="https://github.com/user-attachments/assets/5a2647e1-cedc-4745-a91c-dd27faa62f13" /> <br>
+
+<h6>A Little More about Source</h6>
+The source command (which can be abbreviated as .) is a shell builtin that reads a file directly into the current shell just as if its contents had been entered at the keyboard. Yes, all those strange looking things we have seen in the shell startup files are simply things that shell understands and can act upon. Many older text-based operating systems (DOS, CP/M, etc.) functioned mainly as simple program launchers. Unix style shells can do that of course, as we have seen, but they can also do so much more <br>
+
+we learned an essential skill — editing configuration files with a text editor. Moving forward, as we read man pages for commands, take note of the environment variables that commands support. There may be a gem or two. In later chapters, we will learn about shell functions, a powerful feature that you can also include in the bash startup files to add to your arsenal of custom commands.
+
+
 
 
 
