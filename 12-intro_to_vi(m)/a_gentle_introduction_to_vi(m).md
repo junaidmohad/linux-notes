@@ -83,8 +83,65 @@ The y command is used to “yank” (copy) text in much the same way the d comma
 
 <img width="484" height="301" alt="image" src="https://github.com/user-attachments/assets/d36f996c-37ab-403c-94a0-31c6e946564c" />
 
+<h6>Joining Lines</h6>
+vi is rather strict about its idea of a line. Normally, it is not possible to move the cursor to the end of a line and delete the end-of-line character to join one line with the one below it. Because of this, vi provides a specific command, J (not to be confused with j, which is for cursor movement), to join lines together.
+
+<h6>Search-and-Replace</h6>
+vi has the ability to move the cursor to locations based on searches. It can do this either on a single line or over an entire file. It can also perform text replacements with or without confirmation from the user.
+
+<h6>Searching Within a Line</h6>
+The f command searches a line and moves the cursor to the next instance of a specified character. For example, the command fa would move the cursor to the next occurrence of the character a within the current line. After performing a character search within a line, the search may be repeated by typing a semicolon.
+
+<h6>Searching the Entire File</h6>
+To move the cursor to the next occurrence of a word or phrase, the / command is used. This works the same way as we learned earlier in the less program. When you type the / command, a / will appear at the bottom of the screen. Next, type the word or phrase to be searched for, followed by the Enter key. The cursor will move to the next location containing the search string. A search may be repeated using the previous search string with the n command.<br>
+The cursor will move to line 2. Next, type n and the cursor will move to line 3. Repeating the n command will move the cursor down the file until it runs out of matches. While we have so far used only words and phrases for our search patterns, vi allows the use of regular expressions, a powerful method of expressing complex text patterns.
+
+<h6>Global Search-and-Replace</h6>
+vi uses command mode to perform search-and-replace operations (called substitution in vi) over a range of lines or the entire file. To change the word Line to line for the entire file, we would enter the following command: <br>
+:%s/Line/line/g <br>
+<img width="826" height="522" alt="image" src="https://github.com/user-attachments/assets/c12757d6-a641-41c9-84d3-801f1db3be6b" /> <br>
+
+We can also specify a substitution command with user confirmation. This is done by adding a c to the end of the command. Here’s an example: <br>
+:%s/line/Line/gc <br>
+This command will change our file back to its previous form; however, before each substitution, vi stops and asks us to confirm the substitution with this message: <br>
+replace with Line (y/n/a/q/l/^E/^Y)? <br>
+
+<img width="804" height="387" alt="image" src="https://github.com/user-attachments/assets/b12185a9-7c30-4a2f-bb6d-fd4e4b8069f0" /> <br>
+
+<h6>Editing Multiple Files</h6>
+It's often useful to edit more than one file at a time. You might need to make changes to multiple files or you may need to copy content from one file into another. With vi we can open multiple files for editing by specifying them on the command line. <br>
+vi file1 file2 file3... <br>
+
+<h6>Switching Between Files</h6>
+To switch from one file to the next, use this ex command: <br>
+:bn <br>
+To move back to the previous file use the following: <br>
+:bp <br>
+
+While we can move from one file to another, vi enforces a policy that prevents us from switching files if the current file has unsaved changes. To force vi to switch files and abandon your changes, add an exclamation point (!) to the command.
+<br> 
+In addition to the switching method described above, vim (and some versions of vi) provides some command mode commands that make multiple files easier to manage. We can view a list of files being edited with the :buffers command. <br>
+
+To switch to another buffer (file), type :buffer followed by the number of the buffer we want to edit. For example, to switch from buffer 1 containing the file foo.txt to buffer 2 containing the file ls-output.txt we would type this: <br>
+:buffer 2 <br>
+
+<h6>Opening Additional Files for Editing</h6>
+It's also possible to add files to our current editing session. The command mode command :e (short for “edit”) followed by a filename will open an additional file. Let's end our current editing session and return to the command line.
+
+<h6>Copying Content from One File into Another</h6>
+Often while editing multiple files, we will want to copy a portion of one file into another file that we are editing. This is easily done using the usual yank and paste commands we used earlier.
+
+<h6>Inserting an Entire File into Another</h6>
+It's also possible to insert an entire file into one that we are editing. <br>
+The :r command (short for “read”) inserts the specified file below the cursor position. <br>
 
 
+**<h6>Saving Our Work</h6>**
+Like everything else in vi, there are several different ways to save our edited files. In normal mode, typing ZZ will save the current file and exit vi. Likewise, the command mode command :wq will combine the :w and :q commands into one that will both save the file and exit.
+The :w command may also specify an optional filename. This acts like “Save As...” For example, if we were editing foo.txt and wanted to save an alternate version called foo1.txt, we would enter the following: <br>
+:w foo1.txt <br>
 
+Note: While this command saves the file under a new name, it does not change the name of the file we are editing. As we continue to edit, we will still be editing foo.txt, not foo1.txt. <br>
 
-
+To return to the emacs-style editing mode, enter this command: <br>
+[me@linuxbox ~]$ set -o emacs <br>
